@@ -6,6 +6,7 @@ import { Navbar } from "@/components/navbar"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { marked } from 'marked'
 
 export const maxDuration = 60
 
@@ -83,7 +84,7 @@ export default async function RoastResultPage({ params }: { params: { id: string
                         <ScoreCounter score={roast.score} />
 
                         <div className="prose prose-invert prose-lg max-w-none bg-zinc-900/30 p-6 rounded-xl border border-zinc-800">
-                            <div dangerouslySetInnerHTML={{ __html: roastBody.replace(/\n/g, '<br/>') }} />
+                            <div dangerouslySetInnerHTML={{ __html: marked(roastBody) as string }} />
                         </div>
 
                         <ShareButtons roastId={roast.id} score={roast.score} url={roast.url} />
