@@ -2,12 +2,12 @@ export async function callSiliconFlow(model: string, systemPrompt: string, userP
     const apiKey = process.env.SILICONFLOW_API_KEY
     const baseUrl = process.env.SILICONFLOW_API_URL || 'https://api.siliconflow.com/v1'
 
-    const groqKey = process.env.GROQ_API_KEY
-    const groqModel = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'
+    const xaiKey = process.env.GROQ_API_KEY
+    const xaiModel = process.env.GROQ_MODEL || 'grok-2-1212'
 
     if (!apiKey) {
-        // If no SiliconFlow key, try Groq immediately if available
-        if (groqKey) return callGroqFallback(groqModel, systemPrompt, userPrompt)
+        // If no SiliconFlow key, try xAI immediately if available
+        if (xaiKey) return callXaiFallback(xaiModel, systemPrompt, userPrompt)
         throw new Error('SILICONFLOW_API_KEY is not defined')
     }
 
@@ -35,9 +35,9 @@ export async function callSiliconFlow(model: string, systemPrompt: string, userP
             console.error('SiliconFlow API Error:', response.status, errorText)
 
             // Trigger fallback on error
-            if (groqKey) {
-                console.log('Switching to Groq fallback...')
-                return callGroqFallback(groqModel, systemPrompt, userPrompt)
+            if (xaiKey) {
+                console.log('Switching to xAI fallback...')
+                return callXaiFallback(xaiModel, systemPrompt, userPrompt)
             }
 
             throw new Error(`SiliconFlow API failed: ${response.status}`)
@@ -59,15 +59,15 @@ export async function callSiliconFlow(model: string, systemPrompt: string, userP
     }
 }
 
-async function callGroqFallback(model: string, systemPrompt: string, userPrompt: string) {
-    const groqKey = process.env.GROQ_API_KEY
-    if (!groqKey) throw new Error('GROQ_API_KEY not found for fallback')
+async function callXaiFallback(model: string, systemPrompt: string, userPrompt: string) {
+    const xaiKey = process.env.GROQ_API_KEY
+    if (!xaiKey) throw new Error('xAI API key not found for fallback')
 
-    console.log(`Calling Groq fallback with model: ${model}`)
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    console.log(`Calling xAI (Grok) fallback with model: ${model}`)
+    const response = await fetch('https://api.x.ai/v1/chat/completions', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${groqKey}`,
+            'Authorization': `Bearer ${xaiKey}`,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -77,14 +77,14 @@ async function callGroqFallback(model: string, systemPrompt: string, userPrompt:
                 { role: 'user', content: userPrompt },
             ],
             temperature: 0.7,
-            max_tokens: 1024,
+            stream: false,
             response_format: { type: "json_object" }
         }),
     })
 
     if (!response.ok) {
         const errorText = await response.text()
-        throw new Error(`Groq Fallback failed: ${response.status} ${errorText}`)
+        throw new Error(`xAI (Grok) Fallback failed: ${response.status} ${errorText}`)
     }
 
     const data = await response.json()
