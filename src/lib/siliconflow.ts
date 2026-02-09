@@ -1,11 +1,13 @@
 export async function callSiliconFlow(model: string, systemPrompt: string, userPrompt: string) {
     const apiKey = process.env.SILICONFLOW_API_KEY
+    const baseUrl = process.env.SILICONFLOW_API_URL || 'https://api.siliconflow.com/v1'
+
     if (!apiKey) {
         throw new Error('SILICONFLOW_API_KEY is not defined')
     }
 
     try {
-        const response = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
+        const response = await fetch(`${baseUrl}/chat/completions`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
