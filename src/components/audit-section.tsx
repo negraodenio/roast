@@ -187,6 +187,35 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         </CardContent>
                     </Card>
                 </TabsContent>
+                <TabsContent value="compliance" className="mt-6 space-y-4">
+                    <Card className="bg-zinc-900/50 border-zinc-800">
+                        <CardHeader>
+                            <CardTitle className="flex items-center justify-between">
+                                <span>Compliance & Accessibility</span>
+                                <span className="text-2xl font-bold text-primary">{roast.performance_audit?.score || '?'}/100</span>
+                            </CardTitle>
+                            <CardDescription>{roast.performance_audit?.summary}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {roast.performance_audit?.issues?.map((issue: any, i: number) => (
+                                <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
+                                    <div className="flex items-center gap-2 font-bold mb-1">
+                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> : <Info className="text-yellow-500 w-5 h-5 shrink-0" />}
+                                        {issue.title}
+                                    </div>
+                                    <div className="text-sm text-zinc-400 mb-2 pl-7">
+                                        <span className="font-semibold text-zinc-300">Risk:</span> {issue.description}
+                                    </div>
+                                    <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
+                                        <strong className="block mb-1">To be Compliant:</strong>
+                                        {issue.fix}
+                                    </div>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
             </Tabs>
         </div>
     )
