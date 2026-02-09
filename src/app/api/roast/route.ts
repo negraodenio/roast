@@ -10,6 +10,12 @@ export const dynamic = 'force-dynamic'
 // Allow long running process (max 60s on Vercel Pro/Hobby is usually 10s so be careful, edge runtime might be needed but Cheerio is Node)
 export const maxDuration = 60
 
+const DEFAULT_MODELS = {
+    roast: process.env.SILICONFLOW_ROAST_MODEL || 'deepseek-ai/DeepSeek-V3',
+    ux: process.env.SILICONFLOW_UX_MODEL || 'Qwen/Qwen2.5-72B-Instruct',
+    seo: process.env.SILICONFLOW_SEO_MODEL || 'deepseek-ai/DeepSeek-V3'
+}
+
 export async function POST(req: NextRequest) {
     try {
         const { url, isPublic } = await req.json()
@@ -68,22 +74,15 @@ export async function POST(req: NextRequest) {
 
         // Roast Task
         const roastPromise = callSiliconFlow(
-            'deepseek-ai/DeepSeek-V2.5',
+            DEFAULT_MODELS.roast,
             `You are a savage but constructive website roaster. You are the Gordon Ramsay of web design.
-         Return JSON only: { "score": number (0-100), "headline": string, "roast": string (markdown), "tldr": string }`,
+          Return JSON only: { "score": number (0-100), "headline": string, "roast": string (markdown), "tldr": string }`,
             `Roast this site:\n${siteContext}`
-        )
-
-        // UX Audit Task
-        const uxPromise = callSiliconFlow(
-            'Qwen/Qwen2.5-72B-Instruct',
-            `You are a UX expert. Return JSON only: { "score": number, "issues": [{ "severity": "critical"|"warning", "title": string, "fix": string }], "summary": string }`,
-            `Audit UX for:\n${siteContext}`
         )
 
         // SEO Audit Task
         const seoPromise = callSiliconFlow(
-            'deepseek-ai/DeepSeek-V2.5',
+            DEFAULT_MODELS.seo,
             `You are an SEO expert. Return JSON only: { "score": number, "title_check": string, "meta_check": string, "issues": [{ "severity": "critical"|"warning", "title": string, "fix": string }] }`,
             `Audit SEO for:\n${siteContext}`
         )
