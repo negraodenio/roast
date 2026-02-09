@@ -70,7 +70,7 @@ async function callOpenRouterFallback(model: string, systemPrompt: string, userP
             'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
             'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'https://roastthis.site',
-            'X-Title': 'RoastMySite',
+            'X-Title': 'RoastThis',
         },
         body: JSON.stringify({
             model,

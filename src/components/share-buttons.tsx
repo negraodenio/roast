@@ -11,7 +11,7 @@ interface ShareButtonsProps {
 
 export function ShareButtons({ roastId, score, url }: ShareButtonsProps) {
     const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/roast/${roastId}` : ''
-    const shareText = `My website just got roasted by AI and scored ${score}/100 💀🔥 ${url} via @roastmysite`
+    const shareText = `My website just got roasted by AI and scored ${score}/100 💀🔥 ${url} via @roastthis`
 
     const copyLink = () => {
         navigator.clipboard.writeText(shareUrl)

@@ -36,7 +36,7 @@ export default function DashboardLayout({
                 <div className="p-6">
                     <Link href="/" className="flex items-center gap-2 font-black text-xl hover:opacity-80 transition-opacity">
                         <Flame className="w-6 h-6 text-red-500 fill-red-500" />
-                        <span>RoastMySite</span>
+                        <span>RoastThis</span>
                     </Link>
                 </div>
 

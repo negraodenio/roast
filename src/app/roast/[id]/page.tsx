@@ -103,7 +103,7 @@ export default async function RoastResultPage({ params }: { params: { id: string
             </main>
 
             <footer className="py-8 border-t border-zinc-900 text-center text-zinc-500 text-sm">
-                RoastMySite &copy; {new Date().getFullYear()}
+                RoastThis &copy; {new Date().getFullYear()}
             </footer>
         </div>
     )

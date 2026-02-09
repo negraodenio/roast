@@ -92,7 +92,7 @@ export default async function Home() {
             </main>
 
             <footer className="py-8 border-t border-zinc-900 text-center text-zinc-500 text-sm">
-                Built with 😡 and ☕ by RoastMySite.
+                Built with 😡 and ☕ by RoastThis.
             </footer>
         </div>
     )

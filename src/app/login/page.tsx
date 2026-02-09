@@ -39,7 +39,7 @@ export default function LoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-black p-4">
             <Card className="w-full max-w-md bg-zinc-950 border-zinc-800">
                 <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold text-center">Login to RoastMySite</CardTitle>
+                    <CardTitle className="text-2xl font-bold text-center">Login to RoastThis</CardTitle>
                     <CardDescription className="text-center">
                         Enter your email to access your roasts
                     </CardDescription>

@@ -111,7 +111,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
                 </div>
 
                 <div style={{ position: 'absolute', bottom: 40, right: 40, fontSize: 30, color: '#52525b' }}>
-                    roastmysite.com
+                    roastthis.site
                 </div>
             </div>
         ),

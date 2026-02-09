@@ -36,7 +36,7 @@ export function Navbar() {
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2 font-black text-xl tracking-tighter hover:opacity-80 transition-opacity">
                     <Flame className="w-6 h-6 text-red-500 fill-red-500" />
-                    <span>RoastMySite</span>
+                    <span>RoastThis</span>
                 </Link>
 
                 <div className="flex items-center gap-4">
