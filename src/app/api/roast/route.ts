@@ -69,33 +69,84 @@ export async function POST(req: NextRequest) {
     `
 
         // 4. Parallel LLM Calls
-        // Only running Roast + UX + SEO for MVP speed, others can be separate or combined if too slow
-        // The user asked for specific models.
-
         // Roast Task
         const roastPromise = callSiliconFlow(
             DEFAULT_MODELS.roast,
             `You are a savage but constructive website roaster. You are the Gordon Ramsay of web design.
-          Return JSON only: { "score": number (0-100), "headline": string, "roast": string (markdown), "tldr": string }`,
+             Return JSON only: { "score": number (0-100), "headline": string, "roast": string (markdown), "tldr": string }`,
             `Roast this site:\n${siteContext}`
         )
 
         // UX Audit Task
         const uxPromise = callSiliconFlow(
             DEFAULT_MODELS.ux,
-            `You are a UX expert. Return JSON only: { "score": number, "issues": [{ "severity": "critical"|"warning", "title": string, "fix": string }], "summary": string }`,
+            `You are a UX expert. Analyze the site context.
+             Return JSON only: { 
+                "score": number (0-100), 
+                "summary": "Short summary of UX state",
+                "issues": [{ 
+                    "severity": "critical"|"warning", 
+                    "title": "Short title of issue", 
+                    "description": "Why this is bad for users",
+                    "fix": "Actionable step-by-step fix" 
+                }] 
+             }`,
             `Audit UX for:\n${siteContext}`
         )
 
         // SEO Audit Task
         const seoPromise = callSiliconFlow(
             DEFAULT_MODELS.seo,
-            `You are an SEO expert. Return JSON only: { "score": number, "title_check": string, "meta_check": string, "issues": [{ "severity": "critical"|"warning", "title": string, "fix": string }] }`,
+            `You are an SEO expert. Analyze the site context.
+             Return JSON only: { 
+                "score": number (0-100), 
+                "summary": "Short summary of SEO state",
+                "issues": [{ 
+                    "severity": "critical"|"warning", 
+                    "title": "Short title of issue", 
+                    "description": "Impact on ranking",
+                    "fix": "Specific technical fix" 
+                }] 
+             }`,
             `Audit SEO for:\n${siteContext}`
         )
 
+        // Copywriting Audit Task
+        const copyPromise = callSiliconFlow(
+            DEFAULT_MODELS.ux, // reusing high intel model
+            `You are a Copywriting expert. Analyze the site text.
+             Return JSON only: { 
+                "score": number (0-100), 
+                "summary": "Short summary of copy effectiveness",
+                "issues": [{ 
+                    "severity": "critical"|"warning", 
+                    "title": "Short title", 
+                    "description": "Why the copy fails to convert",
+                    "fix": "Rewrite suggestion or structural change" 
+                }] 
+             }`,
+            `Audit Copy for:\n${siteContext}`
+        )
+
+        // Conversion (CRO) Audit Task
+        const croPromise = callSiliconFlow(
+            DEFAULT_MODELS.ux, // reusing high intel model
+            `You are a CRO (Conversion Rate Optimization) expert. Analyze the CTAs and flow.
+             Return JSON only: { 
+                "score": number (0-100), 
+                "summary": "Analysis of conversion potential",
+                "issues": [{ 
+                    "severity": "critical"|"warning", 
+                    "title": "Short title", 
+                    "description": "Why users might drop off",
+                    "fix": "Actionable tactic to increase conversions" 
+                }] 
+             }`,
+            `Audit CRO for:\n${siteContext}`
+        )
+
         // Wait for all
-        const [roastRaw, uxRaw, seoRaw] = await Promise.all([roastPromise, uxPromise, seoPromise])
+        const [roastRaw, uxRaw, seoRaw, copyRaw, croRaw] = await Promise.all([roastPromise, uxPromise, seoPromise, copyPromise, croPromise])
 
         const parseJSON = (str: string) => {
             try { return JSON.parse(str) } catch { return null }
@@ -104,6 +155,8 @@ export async function POST(req: NextRequest) {
         const roast = parseJSON(roastRaw) || { score: 50, headline: "Roast Failed", roast: roastRaw, tldr: "AI timed out roasting you." }
         const ux = parseJSON(uxRaw)
         const seo = parseJSON(seoRaw)
+        const copy = parseJSON(copyRaw)
+        const cro = parseJSON(croRaw)
 
         const finalScore = roast.score || 50
 
@@ -133,10 +186,13 @@ export async function POST(req: NextRequest) {
                 roast_text: roast,
                 ux_audit: ux,
                 seo_audit: seo,
+                copy_audit: copy,
+                conversion_tips: cro, // mapping to conversion_tips column
                 is_public: isPublic ?? true,
             })
             .select()
             .single()
+
 
         if (dbError) {
             console.error('DB Insert Error:', dbError)

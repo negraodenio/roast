@@ -60,12 +60,11 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
     return (
         <div className="w-full max-w-4xl mx-auto mt-12">
             <Tabs defaultValue="ux" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 bg-zinc-900/50 h-auto p-1 text-zinc-400">
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-zinc-900/50 h-auto p-1 text-zinc-400">
                     <TabsTrigger value="ux" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">UX Audit</TabsTrigger>
                     <TabsTrigger value="seo" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">SEO</TabsTrigger>
-                    <TabsTrigger value="copy" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">Copy</TabsTrigger>
+                    <TabsTrigger value="copy" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">Copywriting</TabsTrigger>
                     <TabsTrigger value="cro" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">Conversion</TabsTrigger>
-                    <TabsTrigger value="perf" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">Performance</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="ux" className="mt-6 space-y-4">
@@ -82,12 +81,15 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                             {roast.ux_audit?.issues?.map((issue: any, i: number) => (
                                 <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
                                     <div className="flex items-center gap-2 font-bold mb-1">
-                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5" /> : <Info className="text-yellow-500 w-5 h-5" />}
+                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> : <Info className="text-yellow-500 w-5 h-5 shrink-0" />}
                                         {issue.title}
                                     </div>
-                                    <p className="text-sm text-zinc-400 mb-2">{issue.description}</p>
-                                    <div className="text-sm bg-green-500/10 text-green-400 p-2 rounded border border-green-500/20">
-                                        <strong>Fix:</strong> {issue.fix}
+                                    <div className="text-sm text-zinc-400 mb-2 pl-7">
+                                        <span className="font-semibold text-zinc-300">Why it matters:</span> {issue.description}
+                                    </div>
+                                    <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
+                                        <strong className="block mb-1">How to Fix:</strong>
+                                        {issue.fix}
                                     </div>
                                 </div>
                             ))}
@@ -95,11 +97,92 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                     </Card>
                 </TabsContent>
                 {/* Repeating similar structure for SEO, Copy, etc. - Truncating for brevity in this single file, assume similar structure */}
-                <TabsContent value="seo" className="mt-6">
+                <TabsContent value="copy" className="mt-6 space-y-4">
                     <Card className="bg-zinc-900/50 border-zinc-800">
-                        <CardHeader><CardTitle>SEO Analysis</CardTitle></CardHeader>
-                        <CardContent className="text-zinc-400">
-                            <pre className="whitespace-pre-wrap font-sans text-sm">{JSON.stringify(roast.seo_audit, null, 2)}</pre>
+                        <CardHeader>
+                            <CardTitle className="flex items-center justify-between">
+                                <span>Copywriting</span>
+                                <span className="text-2xl font-bold text-primary">{roast.copy_audit?.score || '?'}/100</span>
+                            </CardTitle>
+                            <CardDescription>{roast.copy_audit?.summary}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {roast.copy_audit?.issues?.map((issue: any, i: number) => (
+                                <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
+                                    <div className="flex items-center gap-2 font-bold mb-1">
+                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> : <Info className="text-yellow-500 w-5 h-5 shrink-0" />}
+                                        {issue.title}
+                                    </div>
+                                    <div className="text-sm text-zinc-400 mb-2 pl-7">
+                                        <span className="font-semibold text-zinc-300">Why it matches:</span> {issue.description}
+                                    </div>
+                                    <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
+                                        <strong className="block mb-1">How to Fix:</strong>
+                                        {issue.fix}
+                                    </div>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="cro" className="mt-6 space-y-4">
+                    <Card className="bg-zinc-900/50 border-zinc-800">
+                        <CardHeader>
+                            <CardTitle className="flex items-center justify-between">
+                                <span>Conversion (CRO)</span>
+                                <span className="text-2xl font-bold text-primary">{roast.conversion_tips?.score || '?'}/100</span>
+                            </CardTitle>
+                            <CardDescription>{roast.conversion_tips?.summary}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {roast.conversion_tips?.issues?.map((issue: any, i: number) => (
+                                <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
+                                    <div className="flex items-center gap-2 font-bold mb-1">
+                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> : <Info className="text-yellow-500 w-5 h-5 shrink-0" />}
+                                        {issue.title}
+                                    </div>
+                                    <div className="text-sm text-zinc-400 mb-2 pl-7">
+                                        <span className="font-semibold text-zinc-300">Why to fix:</span> {issue.description}
+                                    </div>
+                                    <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
+                                        <strong className="block mb-1">Action Plan:</strong>
+                                        {issue.fix}
+                                    </div>
+                                </div>
+                            ))}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="seo" className="mt-6 space-y-4">
+                    <Card className="bg-zinc-900/50 border-zinc-800">
+                        <CardHeader>
+                            <CardTitle className="flex items-center justify-between">
+                                <span>SEO Analysis</span>
+                                <span className="text-2xl font-bold text-primary">{roast.seo_audit?.score || '?'}/100</span>
+                            </CardTitle>
+                            <CardDescription>{roast.seo_audit?.summary}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                            {roast.seo_audit?.issues?.map((issue: any, i: number) => (
+                                <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
+                                    <div className="flex items-center gap-2 font-bold mb-1">
+                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> : <Info className="text-yellow-500 w-5 h-5 shrink-0" />}
+                                        {issue.title}
+                                    </div>
+                                    <div className="text-sm text-zinc-400 mb-2 pl-7">
+                                        <span className="font-semibold text-zinc-300">Impact:</span> {issue.description}
+                                    </div>
+                                    <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
+                                        <strong className="block mb-1">Technical Fix:</strong>
+                                        {issue.fix}
+                                    </div>
+                                </div>
+                            ))}
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -107,3 +190,4 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
         </div>
     )
 }
+

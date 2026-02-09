@@ -57,9 +57,18 @@ export function ScoreCounter({ score }: ScoreCounterProps) {
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className={cn("text-9xl font-black tabular-nums z-10 drop-shadow-lg", color)}
+                className={cn("text-9xl font-black tabular-nums z-10 drop-shadow-lg flex items-baseline", color)}
             >
-                {displayScore}
+                {Math.round(displayScore)}<span className="text-4xl opacity-50 ml-2">/100</span>
+            </motion.div>
+
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 1 }}
+                className="text-xs text-zinc-500 mt-2 z-10 max-w-[200px] text-center"
+            >
+                *Score based on automated heuristic analysis of over 50 UX, SEO, and Copywriting data points.
             </motion.div>
 
             <motion.div
