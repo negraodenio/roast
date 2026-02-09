@@ -2,12 +2,12 @@ export async function callSiliconFlow(model: string, systemPrompt: string, userP
     const apiKey = process.env.SILICONFLOW_API_KEY
     const baseUrl = process.env.SILICONFLOW_API_URL || 'https://api.siliconflow.com/v1'
 
-    const xaiKey = process.env.GROQ_API_KEY
-    const xaiModel = process.env.GROQ_MODEL || 'grok-2-1212'
+    const openRouterKey = process.env.OPENROUTER_API_KEY
+    const openRouterModel = process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini'
 
     if (!apiKey) {
-        // If no SiliconFlow key, try xAI immediately if available
-        if (xaiKey) return callXaiFallback(xaiModel, systemPrompt, userPrompt)
+        // If no SiliconFlow key, try OpenRouter immediately if available
+        if (openRouterKey) return callOpenRouterFallback(openRouterModel, systemPrompt, userPrompt)
         throw new Error('SILICONFLOW_API_KEY is not defined')
     }
 
@@ -35,9 +35,9 @@ export async function callSiliconFlow(model: string, systemPrompt: string, userP
             console.error('SiliconFlow API Error:', response.status, errorText)
 
             // Trigger fallback on error
-            if (xaiKey) {
-                console.log('Switching to xAI fallback...')
-                return callXaiFallback(xaiModel, systemPrompt, userPrompt)
+            if (openRouterKey) {
+                console.log('Switching to OpenRouter fallback...')
+                return callOpenRouterFallback(openRouterModel, systemPrompt, userPrompt)
             }
 
             throw new Error(`SiliconFlow API failed: ${response.status}`)
@@ -50,25 +50,27 @@ export async function callSiliconFlow(model: string, systemPrompt: string, userP
     } catch (error) {
         console.error('Primary LLM Call Error:', error)
 
-        if (xaiKey) {
-            console.log('Switching to xAI fallback after exception...')
-            return callXaiFallback(xaiModel, systemPrompt, userPrompt)
+        if (openRouterKey) {
+            console.log('Switching to OpenRouter fallback after exception...')
+            return callOpenRouterFallback(openRouterModel, systemPrompt, userPrompt)
         }
 
         throw error
     }
 }
 
-async function callXaiFallback(model: string, systemPrompt: string, userPrompt: string) {
-    const xaiKey = process.env.GROQ_API_KEY
-    if (!xaiKey) throw new Error('xAI API key not found for fallback')
+async function callOpenRouterFallback(model: string, systemPrompt: string, userPrompt: string) {
+    const apiKey = process.env.OPENROUTER_API_KEY
+    if (!apiKey) throw new Error('OpenRouter API key not found for fallback')
 
-    console.log(`Calling xAI (Grok) fallback with model: ${model}`)
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+    console.log(`Calling OpenRouter fallback with model: ${model}`)
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${xaiKey}`,
+            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
+            'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'https://roastthis.site',
+            'X-Title': 'RoastMySite',
         },
         body: JSON.stringify({
             model,
@@ -77,14 +79,13 @@ async function callXaiFallback(model: string, systemPrompt: string, userPrompt: 
                 { role: 'user', content: userPrompt },
             ],
             temperature: 0.7,
-            stream: false,
             response_format: { type: "json_object" }
         }),
     })
 
     if (!response.ok) {
         const errorText = await response.text()
-        throw new Error(`xAI (Grok) Fallback failed: ${response.status} ${errorText}`)
+        throw new Error(`OpenRouter Fallback failed: ${response.status} ${errorText}`)
     }
 
     const data = await response.json()
