@@ -80,6 +80,13 @@ export async function POST(req: NextRequest) {
             `Roast this site:\n${siteContext}`
         )
 
+        // UX Audit Task
+        const uxPromise = callSiliconFlow(
+            DEFAULT_MODELS.ux,
+            `You are a UX expert. Return JSON only: { "score": number, "issues": [{ "severity": "critical"|"warning", "title": string, "fix": string }], "summary": string }`,
+            `Audit UX for:\n${siteContext}`
+        )
+
         // SEO Audit Task
         const seoPromise = callSiliconFlow(
             DEFAULT_MODELS.seo,
