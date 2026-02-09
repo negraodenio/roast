@@ -50,9 +50,9 @@ export async function callSiliconFlow(model: string, systemPrompt: string, userP
     } catch (error) {
         console.error('Primary LLM Call Error:', error)
 
-        if (groqKey) {
-            console.log('Switching to Groq fallback after exception...')
-            return callGroqFallback(groqModel, systemPrompt, userPrompt)
+        if (xaiKey) {
+            console.log('Switching to xAI fallback after exception...')
+            return callXaiFallback(xaiModel, systemPrompt, userPrompt)
         }
 
         throw error
