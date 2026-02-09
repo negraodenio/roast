@@ -61,7 +61,7 @@ export default async function RoastResultPage({ params }: { params: { id: string
                     <ArrowLeft className="w-4 h-4 mr-2" /> Roast Another Site
                 </Link>
 
-                <div className="grid lg:grid-cols-2 gap-12 items-start opacity-0 animate-in fade-in slide-in-from-bottom-5 duration-700 fill-mode-forwards">
+                <div className="grid lg:grid-cols-2 gap-12 items-start">
                     {/* Left Column: The Roast */}
                     <div className="space-y-8">
                         <div className="text-center lg:text-left">
