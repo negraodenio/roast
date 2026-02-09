@@ -1,9 +1,9 @@
 export async function callSiliconFlow(model: string, systemPrompt: string, userPrompt: string) {
-    const apiKey = process.env.SILICONFLOW_API_KEY
-    const baseUrl = process.env.SILICONFLOW_API_URL || 'https://api.siliconflow.com/v1'
+    const apiKey = process.env.SILICONFLOW_API_KEY?.trim()
+    const baseUrl = process.env.SILICONFLOW_API_URL?.trim() || 'https://api.siliconflow.com/v1'
 
-    const openRouterKey = process.env.OPENROUTER_API_KEY
-    const openRouterModel = process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini'
+    const openRouterKey = process.env.OPENROUTER_API_KEY?.trim()
+    const openRouterModel = process.env.OPENROUTER_MODEL?.trim() || 'openai/gpt-4o-mini'
 
     if (!apiKey) {
         // If no SiliconFlow key, try OpenRouter immediately if available
