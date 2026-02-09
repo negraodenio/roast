@@ -25,8 +25,15 @@ export default async function RoastResultPage({ params }: { params: { id: string
     const { data: { user } } = await supabase.auth.getUser()
 
     // Access Control Logic (server-side check matches API)
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('plan')
+        .eq('id', user?.id || '')
+        .single()
+
     const isOwner = user?.id && roast.user_id === user.id
-    const showFullDetails = isOwner || roast.paid || false // Agency check omitted for MVP simplicity
+    const isAgency = profile?.plan === 'agency'
+    const showFullDetails = isOwner || isAgency || roast.paid || false
 
     // Mask audit data if locked to prevent HTML scraping of unlocked content
     const safeRoast = showFullDetails ? roast : {
