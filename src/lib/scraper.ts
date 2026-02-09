@@ -12,6 +12,17 @@ export interface ScrapeResult {
     buttonCount: number
     ctaTexts: string[]
     techStack: string[]
+    legalLinks: {
+        privacy: boolean
+        terms: boolean
+        cookies: boolean
+        accessibility: boolean
+    }
+    accessibility: {
+        imagesWithAlt: number
+        totalImages: number
+        ariaElements: number
+    }
 }
 
 export async function scrapeWebsite(url: string): Promise<ScrapeResult> {
@@ -51,18 +62,44 @@ export async function scrapeWebsite(url: string): Promise<ScrapeResult> {
             .get()
             .filter((v, i, a) => a.indexOf(v) === i) // unique
 
+        // Detect Legal Pages
+        const links = $('a').map((_, el) => ({
+            text: $(el).text().toLowerCase(),
+            href: $(el).attr('href') || ''
+        })).get()
+
+        const legalLinks = {
+            privacy: links.some(l => l.text.includes('privacy') || l.href.includes('privacy')),
+            terms: links.some(l => l.text.includes('terms') || l.href.includes('terms')),
+            cookies: links.some(l => l.text.includes('cookie') || l.href.includes('cookie')),
+            accessibility: links.some(l => l.text.includes('accessibility') || l.href.includes('accessibility'))
+        }
+
+        // Accessibility Checks
+        const images = $('img')
+        const imagesWithAlt = images.filter((_, el) => $(el).attr('alt') !== undefined && $(el).attr('alt') !== '').length
+        const totalImages = images.length
+
+        const ariaElements = $('[aria-label], [aria-labelledby], [role]').length
+
         return {
             title: $('title').text().trim(),
             metaDescription: $('meta[name="description"]').attr('content') || '',
             headings: headings.slice(0, 20),
             bodyText: $('body').text().replace(/\s+/g, ' ').trim().substring(0, 5000),
-            imageCount: $('img').length,
+            imageCount: totalImages,
             linkCount: $('a').length,
             hasHttps: url.startsWith('https'),
             formCount: $('form').length,
             buttonCount: $('button').length,
             ctaTexts: ctaTexts.slice(0, 10),
-            techStack: [], // Difficult to detect purely from HTML, would need headers/wappalyzer
+            techStack: [],
+            legalLinks,
+            accessibility: {
+                imagesWithAlt,
+                totalImages,
+                ariaElements
+            }
         }
     } catch (error) {
         console.error('Scraping error:', error)

@@ -65,6 +65,8 @@ export async function POST(req: NextRequest) {
       Image Count: ${siteData.imageCount}
       Link Count: ${siteData.linkCount}
       Main CTAs detected: ${siteData.ctaTexts.join(', ')}
+      Legal Links Found: Privacy=${siteData.legalLinks.privacy}, Terms=${siteData.legalLinks.terms}, Cookies=${siteData.legalLinks.cookies}
+      Accessibility Stats: ${siteData.accessibility.imagesWithAlt}/${siteData.accessibility.totalImages} images have alt text. ${siteData.accessibility.ariaElements} ARIA elements found.
       Body Preview: ${siteData.bodyText.substring(0, 2000)}...
     `
 
@@ -145,8 +147,25 @@ export async function POST(req: NextRequest) {
             `Audit CRO for:\n${siteContext}`
         )
 
+        // Compliance & Accessibility Task (saved to performance_audit column)
+        const compliancePromise = callSiliconFlow(
+            DEFAULT_MODELS.ux,
+            `You are a Legal Compliance and Accessibility expert. Check for GDPR/CCPA basics (Privacy, Terms, Cookies) and Accessibility (Alt text, ARIA).
+             Return JSON only: { 
+                "score": number (0-100), 
+                "summary": "Compliance snapshot",
+                "issues": [{ 
+                    "severity": "critical"|"warning", 
+                    "title": "Short title", 
+                    "description": "Legal/Access risk explanation",
+                    "fix": "How to become compliant" 
+                }] 
+             }`,
+            `Audit Compliance for:\n${siteContext}`
+        )
+
         // Wait for all
-        const [roastRaw, uxRaw, seoRaw, copyRaw, croRaw] = await Promise.all([roastPromise, uxPromise, seoPromise, copyPromise, croPromise])
+        const [roastRaw, uxRaw, seoRaw, copyRaw, croRaw, complianceRaw] = await Promise.all([roastPromise, uxPromise, seoPromise, copyPromise, croPromise, compliancePromise])
 
         const parseJSON = (str: string) => {
             try { return JSON.parse(str) } catch { return null }
@@ -157,6 +176,7 @@ export async function POST(req: NextRequest) {
         const seo = parseJSON(seoRaw)
         const copy = parseJSON(copyRaw)
         const cro = parseJSON(croRaw)
+        const compliance = parseJSON(complianceRaw)
 
         const finalScore = roast.score || 50
 
@@ -188,6 +208,7 @@ export async function POST(req: NextRequest) {
                 seo_audit: seo,
                 copy_audit: copy,
                 conversion_tips: cro, // mapping to conversion_tips column
+                performance_audit: compliance, // REPURPOSED: mapping compliance/legal audit to performance_audit column
                 is_public: isPublic ?? true,
             })
             .select()

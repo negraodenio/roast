@@ -60,11 +60,12 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
     return (
         <div className="w-full max-w-4xl mx-auto mt-12">
             <Tabs defaultValue="ux" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 bg-zinc-900/50 h-auto p-1 text-zinc-400">
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 bg-zinc-900/50 h-auto p-1 text-zinc-400">
                     <TabsTrigger value="ux" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">UX Audit</TabsTrigger>
                     <TabsTrigger value="seo" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">SEO</TabsTrigger>
                     <TabsTrigger value="copy" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">Copywriting</TabsTrigger>
                     <TabsTrigger value="cro" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">Conversion</TabsTrigger>
+                    <TabsTrigger value="compliance" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground py-2">Compliance</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="ux" className="mt-6 space-y-4">
