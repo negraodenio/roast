@@ -11,6 +11,7 @@ interface ScoreCounterProps {
         seo?: number
         copy?: number
         conversion?: number
+        security?: number
     }
 }
 
@@ -94,11 +95,12 @@ export function ScoreCounter({ score, subScores }: ScoreCounterProps) {
 
             {/* Sub-scores Logic (Credibility) */}
             {subScores && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full mt-10 relative z-10 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 w-full mt-10 relative z-10 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
                     <ScoreMetric label="UX" value={subScores.ux} />
                     <ScoreMetric label="SEO" value={subScores.seo} />
                     <ScoreMetric label="Copy" value={subScores.copy} />
                     <ScoreMetric label="CRO" value={subScores.conversion} />
+                    <ScoreMetric label="Tech" value={subScores.security} />
                 </div>
             )}
 

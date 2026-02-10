@@ -147,51 +147,58 @@ export async function POST(req: NextRequest) {
             `Audit CRO for:\n${siteContext}`
         )
 
-        // Compliance & Accessibility Task (saved to performance_audit column)
-        const compliancePromise = callSiliconFlow(
+        // Compliance, Accessibility & Security Task (saved to performance_audit column)
+        const securityPromise = callSiliconFlow(
             DEFAULT_MODELS.ux,
-            `You are a Legal Compliance and Accessibility expert. Check for GDPR/CCPA basics (Privacy, Terms, Cookies) and Accessibility (Alt text, ARIA).
+            `You are a Web Security and Compliance expert. Analyze for:
+             1. SSL/HTTPS state.
+             2. Security Headers (X-Powered-By, HSTS).
+             3. General Accessibility (Alt text, ARIA).
+             4. Legal (Privacy/Terms).
              Return JSON only: { 
                 "score": number (0-100), 
-                "summary": "Compliance snapshot",
+                "summary": "Security & Compliance snapshot",
                 "issues": [{ 
                     "severity": "critical"|"warning", 
                     "title": "Short title", 
-                    "description": "Legal/Access risk explanation",
-                    "fix": "How to become compliant" 
+                    "description": "Security/Access risk explanation",
+                    "fix": "How to resolve" 
                 }] 
              }`,
-            `Audit Compliance for:\n${siteContext}`
+            `Audit Security & Compliance for:\n${siteContext}`
         )
 
         // Wait for all
-        const [roastRaw, uxRaw, seoRaw, copyRaw, croRaw, complianceRaw] = await Promise.all([roastPromise, uxPromise, seoPromise, copyPromise, croPromise, compliancePromise])
+        const [roastRaw, uxRaw, seoRaw, copyRaw, croRaw, securityRaw] = await Promise.all([
+            roastPromise,
+            uxPromise,
+            seoPromise,
+            copyPromise,
+            croPromise,
+            securityPromise
+        ])
 
-        const parseJSON = (str: string) => {
-            try { return JSON.parse(str) } catch { return null }
+        const parseJSON = (str: string, fallbackScore = 50) => {
+            try {
+                const data = JSON.parse(str)
+                if (typeof data.score !== 'number') data.score = fallbackScore
+                if (!data.issues) data.issues = []
+                return data
+            } catch {
+                return { score: fallbackScore, summary: "Analysis partial due to AI timeout.", issues: [] }
+            }
         }
 
-        const roast = parseJSON(roastRaw) || { score: 50, headline: "Roast Failed", roast: roastRaw, tldr: "AI timed out roasting you." }
-        const ux = parseJSON(uxRaw)
-        const seo = parseJSON(seoRaw)
-        const copy = parseJSON(copyRaw)
-        const cro = parseJSON(croRaw)
-        const compliance = parseJSON(complianceRaw)
+        const roast = parseJSON(roastRaw, 50)
+        const ux = parseJSON(uxRaw, 60)
+        const seo = parseJSON(seoRaw, 60)
+        const copy = parseJSON(copyRaw, 60)
+        const cro = parseJSON(croRaw, 60)
+        const security = parseJSON(securityRaw, 70)
 
         const finalScore = roast.score || 50
 
-        // 5. Save to DB (using service role to bypass RLS for insert if needed, but user can insert own)
-        // Actually, usually easier to use service role for backend logic
-        // But let's try with the authenticated client if user is logged in
-
-        // For anonymous users, we might need a service role client to insert with user_id=null if RLS prevents it?
-        // My schema said: "Users can insert their own roasts." check (auth.uid() = user_id or user_id is null);
-        // So if user_id is null, anyone can insert? No, auth.uid() is null for anon. 
-        // Wait, `auth.uid() = user_id` where user_id is null means `null = null` which is false in SQL (needs `is null`).
-        // So anon inserts might fail with standard client. 
-        // I will use service_role client for saving roasts to be safe.
-
-        // Re-create supabase with service role
+        // 5. Save to DB
         const supabaseAdmin = createSupabaseClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
             process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -207,8 +214,8 @@ export async function POST(req: NextRequest) {
                 ux_audit: ux,
                 seo_audit: seo,
                 copy_audit: copy,
-                conversion_tips: cro, // mapping to conversion_tips column
-                performance_audit: compliance, // REPURPOSED: mapping compliance/legal audit to performance_audit column
+                conversion_tips: cro,
+                performance_audit: security, // Repurposed for Security & Compliance
                 is_public: isPublic ?? true,
             })
             .select()

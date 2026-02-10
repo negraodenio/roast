@@ -72,7 +72,8 @@ export default async function RoastResultPage({ params }: { params: { id: string
         ux: roast.ux_audit?.score,
         seo: roast.seo_audit?.score,
         copy: roast.copy_audit?.score,
-        conversion: roast.conversion_tips?.score
+        conversion: roast.conversion_tips?.score,
+        security: roast.performance_audit?.score
     }
 
     return (
