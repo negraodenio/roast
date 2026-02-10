@@ -10,9 +10,13 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { LoadingRoast } from "@/components/loading-roast"
 import { createClient } from "@/lib/supabase/client"
+import { ToneSelector } from "@/components/tone-selector"
+
+type RoastTone = "mild" | "medium" | "spicy"
 
 export default function NewRoastPage() {
     const [url, setUrl] = useState("")
+    const [tone, setTone] = useState<RoastTone>("medium")
     const [loading, setLoading] = useState(false)
     const [isPublic, setIsPublic] = useState(true)
     const [roasting, setRoasting] = useState(false)
@@ -41,7 +45,8 @@ export default function NewRoastPage() {
                 body: JSON.stringify({
                     url: validUrl,
                     userId: user?.id,
-                    isPublic
+                    isPublic,
+                    tone
                 }),
                 headers: { 'Content-Type': 'application/json' }
             })
@@ -81,6 +86,11 @@ export default function NewRoastPage() {
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-2">
+                            <Label>Roast Intensity</Label>
+                            <ToneSelector value={tone} onChange={setTone} />
+                        </div>
+
                         <div className="space-y-2">
                             <Label>Website URL</Label>
                             <Input
