@@ -11,9 +11,11 @@ interface LeadCaptureFormProps {
     url: string
     score: number
     roastText: string
+    subScores?: any
+    audits?: any
 }
 
-export function LeadCaptureForm({ roastId, url, score, roastText }: LeadCaptureFormProps) {
+export function LeadCaptureForm({ roastId, url, score, roastText, subScores, audits }: LeadCaptureFormProps) {
     const [email, setEmail] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false)
@@ -33,7 +35,10 @@ export function LeadCaptureForm({ roastId, url, score, roastText }: LeadCaptureF
                     roastData: {
                         url,
                         score,
+                        score,
                         roastText,
+                        subScores,
+                        audits,
                         timestamp: new Date().toISOString()
                     },
                     isPremium: false // Freemium report with 25% text
