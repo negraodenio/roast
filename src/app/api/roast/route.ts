@@ -13,11 +13,13 @@ export const maxDuration = 60
 const DEFAULT_MODELS = {
     roast: process.env.SILICONFLOW_ROAST_MODEL || 'deepseek-ai/DeepSeek-V3',
     ux: process.env.SILICONFLOW_UX_MODEL || 'Qwen/Qwen2.5-72B-Instruct',
-    seo: process.env.SILICONFLOW_SEO_MODEL || 'deepseek-ai/DeepSeek-V3'
+    seo: process.env.SILICONFLOW_SEO_MODEL || 'deepseek-ai/DeepSeek-V3',
+    security: process.env.SILICONFLOW_SECURITY_MODEL || 'Qwen/Qwen2.5-7B-Instruct' // Lighter model for simple security checks
 }
 
 export async function POST(req: NextRequest) {
     try {
+        console.time('⏱️ Total Request Time')
         const { url, isPublic, tone = 'medium' } = await req.json()
 
         // 1. Basic URL Validation
@@ -25,8 +27,31 @@ export async function POST(req: NextRequest) {
         try {
             validUrl = new URL(url.startsWith('http') ? url : `https://${url}`)
         } catch {
-            return NextResponse.json({ error: 'Invalid URL' }, { status: 400 })
+            return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 })
         }
+
+        // 2. Check cache for recent analysis (within 24h)
+        console.time('🔍 Cache Check')
+        const supabaseForCache = await createClient() // Renamed to avoid conflict with later declaration
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+
+        const { data: cachedRoast } = await supabaseForCache
+            .from('roasts')
+            .select('*')
+            .eq('url', validUrl.toString())
+            .gte('created_at', twentyFourHoursAgo)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single()
+
+        console.timeEnd('🔍 Cache Check')
+
+        if (cachedRoast) {
+            console.log('✅ Cache HIT - returning cached result')
+            console.timeEnd('⏱️ Total Request Time')
+            return NextResponse.json({ id: cachedRoast.id, cached: true })
+        }
+        console.log('❌ Cache MISS - running fresh analysis')
 
         // 2. Auth Check & Credits
         const supabase = createClient()
@@ -50,10 +75,13 @@ export async function POST(req: NextRequest) {
         }
 
         // 3. Scrape Website
+        console.time('🌐 Scraping')
         let siteData
         try {
             siteData = await scrapeWebsite(validUrl.toString())
+            console.timeEnd('🌐 Scraping')
         } catch (error: unknown) {
+            console.timeEnd('🌐 Scraping')
             return NextResponse.json({ error: (error as Error).message || 'Could not access website' }, { status: 400 })
         }
 
@@ -156,7 +184,7 @@ export async function POST(req: NextRequest) {
 
         // Compliance, Accessibility & Security Task (saved to performance_audit column)
         const securityPromise = callSiliconFlow(
-            DEFAULT_MODELS.ux,
+            DEFAULT_MODELS.security, // Using lighter Qwen 2.5 7B for faster security checks
             `You are a Web Security and Compliance expert. Analyze for:
              1. SSL/HTTPS state.
              2. Security Headers (X-Powered-By, HSTS).
@@ -175,7 +203,8 @@ export async function POST(req: NextRequest) {
             `Audit Security & Compliance for:\n${siteContext}`
         )
 
-        // Wait for all
+        // Wait for all LLM calls
+        console.time('🤖 LLM Calls (6 parallel)')
         const [roastRaw, uxRaw, seoRaw, copyRaw, croRaw, securityRaw] = await Promise.all([
             roastPromise,
             uxPromise,
@@ -184,6 +213,7 @@ export async function POST(req: NextRequest) {
             croPromise,
             securityPromise
         ])
+        console.timeEnd('🤖 LLM Calls (6 parallel)')
 
         const parseJSON = (str: string, fallbackScore = 50) => {
             try {

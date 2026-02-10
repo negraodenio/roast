@@ -25,7 +25,7 @@ export async function callSiliconFlow(model: string, systemPrompt: string, userP
                     { role: 'user', content: userPrompt },
                 ],
                 temperature: 0.7,
-                max_tokens: 4096,
+                max_tokens: 2048, // Reduced from 4096 for faster responses
                 response_format: { type: "json_object" }
             }),
         })
