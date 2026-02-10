@@ -18,7 +18,7 @@ const DEFAULT_MODELS = {
 
 export async function POST(req: NextRequest) {
     try {
-        const { url, isPublic } = await req.json()
+        const { url, isPublic, tone = 'medium' } = await req.json()
 
         // 1. Basic URL Validation
         let validUrl: URL
@@ -71,10 +71,17 @@ export async function POST(req: NextRequest) {
     `
 
         // 4. Parallel LLM Calls
+        // Define tone personalities
+        const toneInstructions = {
+            mild: "You are a constructive website consultant. Be polite, professional, and encouraging while pointing out areas of improvement. Focus on strengths and frame weaknesses as opportunities.",
+            medium: "You are a direct and honest website roaster, similar to Gordon Ramsay. Point out issues bluntly but professionally. Balance criticism with constructive advice.",
+            spicy: "You are a brutally savage website roaster with zero filter. Unleash maximum sarcasm and roast without mercy. Make it hurt but keep it funny. Channel your inner drill sergeant mixed with a stand-up comedian."
+        }
+
         // Roast Task
         const roastPromise = callSiliconFlow(
             DEFAULT_MODELS.roast,
-            `You are a savage but constructive website roaster. You are the Gordon Ramsay of web design.
+            `${toneInstructions[tone as keyof typeof toneInstructions] || toneInstructions.medium}
              Return JSON only: { "score": number (0-100), "headline": string, "roast": string (markdown), "tldr": string }`,
             `Roast this site:\n${siteContext}`
         )
@@ -217,6 +224,7 @@ export async function POST(req: NextRequest) {
                 conversion_tips: cro,
                 performance_audit: security, // Repurposed for Security & Compliance
                 is_public: isPublic ?? true,
+                tone: tone // Save user's tone preference
             })
             .select()
             .single()
