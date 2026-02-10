@@ -49,7 +49,9 @@ export async function POST(req: NextRequest) {
         if (cachedRoast) {
             console.log('✅ Cache HIT - returning cached result')
             console.timeEnd('⏱️ Total Request Time')
-            return NextResponse.json({ id: cachedRoast.id, cached: true })
+            console.log(`✅ Roast completed for ${validUrl.toString()}`)
+
+            return NextResponse.json({ roastId: cachedRoast.id, cached: true })
         }
         console.log('❌ Cache MISS - running fresh analysis')
 
