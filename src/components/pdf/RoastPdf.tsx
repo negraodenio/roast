@@ -152,6 +152,55 @@ const styles = StyleSheet.create({
         color: '#666666',
         textAlign: 'center',
     },
+    teaserBadge: {
+        backgroundColor: '#ff4500',
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        borderRadius: 4,
+        marginTop: 5,
+        alignSelf: 'flex-start',
+    },
+    teaserText: {
+        fontSize: 9,
+        fontWeight: 'bold',
+        color: '#ffffff',
+    },
+    roastSection: {
+        marginBottom: 25,
+        backgroundColor: '#151515',
+        padding: 20,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#333',
+    },
+    roastHeader: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#ff4500', // Primary color
+        marginBottom: 10,
+        textTransform: 'uppercase',
+        letterSpacing: 2,
+    },
+    sectionTitle: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: '#ffffff',
+        marginTop: 10,
+        marginBottom: 5,
+    },
+    textParagraph: {
+        fontSize: 10,
+        color: '#cccccc',
+        lineHeight: 1.5,
+        marginBottom: 6,
+    },
+    listItem: {
+        fontSize: 10,
+        color: '#cccccc',
+        lineHeight: 1.5,
+        marginBottom: 4,
+        paddingLeft: 10,
+    },
 })
 
 interface AuditIssue {
@@ -188,168 +237,169 @@ interface RoastPdfProps {
     }
 }
 
-export const RoastPdf: React.FC<RoastPdfProps> = ({
-    url,
-    score,
-    roastText,
-    timestamp,
-    isPremium = false,
-    subScores,
-    audits,
-}) => {
-    const getScoreColor = (score: number) => {
-        if (score >= 70) return '#22c55e'
-        if (score >= 40) return '#f59e0b'
-        return '#ef4444'
-    }
+const renderFormattedText = (text: string) => {
+    if (!text) return null
 
-    const getSeverityColor = (severity: 'critical' | 'warning') => {
-        return severity === 'critical' ? '#ef4444' : '#f59e0b'
-    }
+    // Remove "The Savage Truth" header if it exists in the text since we add our own or it's redundant
+    const cleanText = text.replace(/^#*\s*The Savage Truth\s*/i, '').trim()
 
-    // Calculate total issues
-    const totalIssues = Object.values(audits || {}).reduce((sum, audit) =>
-        sum + (audit?.issues?.length || 0), 0
-    )
+    return cleanText.split('\n').map((line, i) => {
+        const trimmed = line.trim()
+        if (!trimmed) return <View key={i} style={{ height: 8 }} />
 
-    const shownIssuesCount = Object.values(audits || {}).reduce((sum, audit) =>
-        sum + Math.min(2, audit?.issues?.length || 0), 0
-    )
+        // Headers / Sections
+        if (trimmed.startsWith('#') || trimmed.startsWith('🚨') || trimmed.startsWith('⚽')) {
+            return (
+                <Text key={i} style={styles.sectionTitle}>
+                    {trimmed.replace(/^#+\s*/, '')}
+                </Text>
+            )
+        }
 
-    const hiddenPercentage = totalIssues > 0
-        ? Math.round(((totalIssues - shownIssuesCount) / totalIssues) * 100)
-        : 0
+        // List items
+        if (trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
+            return (
+                <Text key={i} style={styles.listItem}>
+                    • {trimmed.substring(2)}
+                </Text>
+            )
+        }
 
-    const categories = [
-        { key: 'ux', label: 'UX', icon: '🎨' },
-        { key: 'seo', label: 'SEO', icon: '🔍' },
-        { key: 'copy', label: 'Copywriting', icon: '✍️' },
-        { key: 'conversion', label: 'CRO', icon: '📈' },
-        { key: 'security', label: 'Security & Tech', icon: '🔐' },
-    ]
+        // Normal paragraphs
+        return (
+            <Text key={i} style={styles.textParagraph}>
+                {trimmed}
+            </Text>
+        )
+    })
+}
 
-    return (
-        <Document>
-            <Page size="A4" style={styles.page}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>🔥 Roast Report</Text>
-                    <Text style={styles.subtitle}>Análise de: {url}</Text>
-                    <Text style={styles.subtitle}>
-                        Gerado em: {new Date(timestamp).toLocaleString('pt-BR')}
-                    </Text>
-                </View>
-
-                {/* Score Principal + Sub-scores */}
-                <View style={styles.scoreSection}>
-                    <Text style={styles.scoreLabel}>SCORE GERAL</Text>
-                    <Text
-                        style={[
-                            styles.scoreValue,
-                            { color: getScoreColor(score) },
-                        ]}
-                    >
-                        {score}/100
-                    </Text>
-
-                    {subScores && (
-                        <View style={styles.subScoresGrid}>
-                            <View style={styles.subScoreItem}>
-                                <Text style={styles.subScoreLabel}>UX</Text>
-                                <Text style={[styles.subScoreValue, { color: getScoreColor(subScores.ux || 0) }]}>
-                                    {subScores.ux || '--'}
-                                </Text>
-                            </View>
-                            <View style={styles.subScoreItem}>
-                                <Text style={styles.subScoreLabel}>SEO</Text>
-                                <Text style={[styles.subScoreValue, { color: getScoreColor(subScores.seo || 0) }]}>
-                                    {subScores.seo || '--'}
-                                </Text>
-                            </View>
-                            <View style={styles.subScoreItem}>
-                                <Text style={styles.subScoreLabel}>COPY</Text>
-                                <Text style={[styles.subScoreValue, { color: getScoreColor(subScores.copy || 0) }]}>
-                                    {subScores.copy || '--'}
-                                </Text>
-                            </View>
-                            <View style={styles.subScoreItem}>
-                                <Text style={styles.subScoreLabel}>CRO</Text>
-                                <Text style={[styles.subScoreValue, { color: getScoreColor(subScores.conversion || 0) }]}>
-                                    {subScores.conversion || '--'}
-                                </Text>
-                            </View>
-                            <View style={styles.subScoreItem}>
-                                <Text style={styles.subScoreLabel}>TECH</Text>
-                                <Text style={[styles.subScoreValue, { color: getScoreColor(subScores.security || 0) }]}>
-                                    {subScores.security || '--'}
-                                </Text>
-                            </View>
-                        </View>
-                    )}
-                </View>
-
-                {/* Preview de Issues (2 primeiros de cada categoria) */}
-                {categories.map(category => {
-                    const audit = audits?.[category.key as keyof typeof audits]
-                    const issues = audit?.issues?.slice(0, 2) || []
-
-                    if (issues.length === 0) return null
-
-                    return (
-                        <View key={category.key} style={styles.categorySection}>
-                            <Text style={styles.categoryHeader}>
-                                {category.icon} {category.label} - {audit?.score || 0}/100
-                            </Text>
-                            {issues.map((issue, idx) => (
-                                <View
-                                    key={idx}
-                                    style={[
-                                        styles.issueCard,
-                                        { borderLeftColor: getSeverityColor(issue.severity) }
-                                    ]}
-                                >
-                                    <Text style={styles.issueTitle}>
-                                        {issue.severity === 'critical' ? '🔴' : '🟠'} {issue.title}
-                                    </Text>
-                                    <Text style={styles.issueDescription}>
-                                        {issue.description}
-                                    </Text>
-                                    <Text style={styles.issueFix}>
-                                        ✓ {issue.fix}
-                                    </Text>
-                                </View>
-                            ))}
-                        </View>
-                    )
-                })}
-
-                {/* Premium Upgrade Block */}
-                {!isPremium && hiddenPercentage > 0 && (
-                    <View style={styles.premiumBlock}>
-                        <Text style={styles.lockIcon}>🔒</Text>
-                        <Text style={styles.premiumTitle}>
-                            {hiddenPercentage}% das Correções Bloqueadas
-                        </Text>
-                        <Text style={styles.premiumText}>
-                            Você está vendo apenas {shownIssuesCount} de {totalIssues} issues encontradas.
-                        </Text>
-                        <Text style={styles.premiumText}>
-                            Desbloqueie análises detalhadas de UX, SEO, Copywriting, CRO e Security
-                        </Text>
-                        <Text style={styles.premiumText}>
-                            com ações práticas para aumentar suas conversões.
-                        </Text>
-                        <Text style={styles.premiumCTA}>
-                            👉 Assine Premium em roastthis.site
-                        </Text>
+return (
+    <Document>
+        <Page size="A4" style={styles.page}>
+            <View style={styles.header}>
+                <Text style={styles.title}>🔥 Roast Report</Text>
+                <Text style={styles.subtitle}>Análise de: {url}</Text>
+                <Text style={styles.subtitle}>
+                    Gerado em: {new Date(timestamp).toLocaleString('pt-BR')}
+                </Text>
+                {!isPremium && (
+                    <View style={styles.teaserBadge}>
+                        <Text style={styles.teaserText}>VERSÃO PRELIMINAR GRATUITA</Text>
                     </View>
                 )}
+            </View>
 
-                <View style={styles.footer}>
-                    <Text style={styles.footerText}>
-                        Gerado por Roasty | roastthis.site | Powered by DeepSeek V3 AI
+            {/* Score Principal + Sub-scores */}
+            <View style={styles.scoreSection}>
+                <Text style={styles.scoreLabel}>SCORE GERAL</Text>
+                <Text style={[styles.scoreValue, { color: getScoreColor(score) }]}>
+                    {score}/100
+                </Text>
+
+                {subScores && (
+                    <View style={styles.subScoresGrid}>
+                        <View style={styles.subScoreItem}>
+                            <Text style={styles.subScoreLabel}>UX</Text>
+                            <Text style={[styles.subScoreValue, { color: getScoreColor(subScores.ux || 0) }]}>
+                                {subScores.ux || '--'}
+                            </Text>
+                        </View>
+                        <View style={styles.subScoreItem}>
+                            <Text style={styles.subScoreLabel}>SEO</Text>
+                            <Text style={[styles.subScoreValue, { color: getScoreColor(subScores.seo || 0) }]}>
+                                {subScores.seo || '--'}
+                            </Text>
+                        </View>
+                        <View style={styles.subScoreItem}>
+                            <Text style={styles.subScoreLabel}>COPY</Text>
+                            <Text style={[styles.subScoreValue, { color: getScoreColor(subScores.copy || 0) }]}>
+                                {subScores.copy || '--'}
+                            </Text>
+                        </View>
+                        <View style={styles.subScoreItem}>
+                            <Text style={styles.subScoreLabel}>CRO</Text>
+                            <Text style={[styles.subScoreValue, { color: getScoreColor(subScores.conversion || 0) }]}>
+                                {subScores.conversion || '--'}
+                            </Text>
+                        </View>
+                        <View style={styles.subScoreItem}>
+                            <Text style={styles.subScoreLabel}>TECH</Text>
+                            <Text style={[styles.subScoreValue, { color: getScoreColor(subScores.security || 0) }]}>
+                                {subScores.security || '--'}
+                            </Text>
+                        </View>
+                    </View>
+                )}
+            </View>
+
+            {/* Roast Text Section */}
+            <View style={styles.roastSection}>
+                <Text style={styles.roastHeader}>The Savage Truth</Text>
+                {renderFormattedText(roastText)}
+            </View>
+
+            {/* Preview de Issues (2 primeiros de cada categoria) */}
+            {categories.map(category => {
+                const audit = audits?.[category.key as keyof typeof audits]
+                const issues = audit?.issues?.slice(0, 2) || []
+
+                if (issues.length === 0) return null
+
+                return (
+                    <View key={category.key} style={styles.categorySection}>
+                        <Text style={styles.categoryHeader}>
+                            {category.icon} {category.label} - {audit?.score || 0}/100
+                        </Text>
+                        {issues.map((issue, idx) => (
+                            <View
+                                key={idx}
+                                style={[
+                                    styles.issueCard,
+                                    { borderLeftColor: getSeverityColor(issue.severity) }
+                                ]}
+                            >
+                                <Text style={styles.issueTitle}>
+                                    {issue.severity === 'critical' ? '🔴' : '🟠'} {issue.title}
+                                </Text>
+                                <Text style={styles.issueDescription}>
+                                    {issue.description}
+                                </Text>
+                                <Text style={styles.issueFix}>
+                                    ✓ {issue.fix}
+                                </Text>
+                            </View>
+                        ))}
+                    </View>
+                )
+            })}
+
+            {/* Premium Upgrade Block */}
+            {!isPremium && (
+                <View style={styles.premiumBlock}>
+                    <Text style={styles.lockIcon}>🔒</Text>
+                    <Text style={styles.premiumTitle}>
+                        Relatório Completo Bloqueado
+                    </Text>
+                    <Text style={styles.premiumText}>
+                        Esta é apenas uma amostra grátis. Para ver o relatório completo
+                        com todas as correções detalhadas e guias passo-a-passo:
+                    </Text>
+                    <Text style={styles.premiumCTA}>
+                        Faça Login em roastthis.site
+                    </Text>
+                    <Text style={{ fontSize: 9, color: '#666', marginTop: 5, textAlign: 'center' }}>
+                        (Seus dados já estão salvos em nossa plataforma)
                     </Text>
                 </View>
-            </Page>
-        </Document>
-    )
+            )}
+
+            <View style={styles.footer}>
+                <Text style={styles.footerText}>
+                    Gerado por Roasty | roastthis.site | Powered by AI
+                </Text>
+            </View>
+        </Page>
+    </Document>
+)
 }
