@@ -279,7 +279,7 @@ export async function POST(req: NextRequest) {
                 conversion_tips: cro,
                 performance_audit: security, // Repurposed for Security & Compliance
                 is_public: isPublic ?? true,
-                // tone: tone // FIXME: Add 'tone' column to roasts table in Supabase first
+                tone: tone // Save user's tone preference
             })
             .select()
             .single()
