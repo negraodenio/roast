@@ -119,9 +119,15 @@ export default async function RoastResultPage({ params }: { params: { id: string
 
                             <article className="prose prose-invert prose-lg max-w-none 
                                 prose-headings:text-white prose-headings:font-black prose-headings:tracking-tight
-                                prose-p:text-zinc-400 prose-p:leading-relaxed
-                                prose-strong:text-primary prose-strong:font-bold
-                                prose-li:text-zinc-400">
+                                prose-h2:text-3xl prose-h2:mb-4 prose-h2:mt-6 prose-h2:border-l-4 prose-h2:border-primary prose-h2:pl-4
+                                prose-h3:text-2xl prose-h3:mb-3 prose-h3:mt-5 prose-h3:text-orange-400
+                                prose-p:text-zinc-300 prose-p:leading-relaxed prose-p:mb-5
+                                prose-strong:text-white prose-strong:font-bold
+                                prose-em:text-primary prose-em:not-italic
+                                prose-ul:space-y-3 prose-ul:my-6
+                                prose-li:text-zinc-300 prose-li:leading-relaxed prose-li::marker:text-primary
+                                prose-code:bg-zinc-800 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-primary prose-code:font-mono
+                                prose-blockquote:border-l-4 prose-blockquote:border-yellow-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-zinc-400">
                                 <div dangerouslySetInnerHTML={{ __html: marked.parse(roastBody) as string }} />
                             </article>
                         </div>
