@@ -37,13 +37,29 @@ export default async function RoastResultPage({ params }: { params: { id: string
     const showFullDetails = isOwner || isAgency || roast.paid || false
 
     // Mask audit data if locked to prevent HTML scraping of unlocked content
+    // But keep scores and top 2 issues for the "Teaser PDF" and visual preview
     const safeRoast = showFullDetails ? roast : {
         ...roast,
-        ux_audit: null,
-        seo_audit: null,
-        copy_audit: null,
-        conversion_tips: null,
-        performance_audit: null
+        ux_audit: {
+            ...roast.ux_audit,
+            issues: roast.ux_audit?.issues?.slice(0, 2)
+        },
+        seo_audit: {
+            ...roast.seo_audit,
+            issues: roast.seo_audit?.issues?.slice(0, 2)
+        },
+        copy_audit: {
+            ...roast.copy_audit,
+            issues: roast.copy_audit?.issues?.slice(0, 2)
+        },
+        conversion_tips: {
+            ...roast.conversion_tips,
+            issues: roast.conversion_tips?.issues?.slice(0, 2)
+        },
+        performance_audit: {
+            ...roast.performance_audit,
+            issues: roast.performance_audit?.issues?.slice(0, 2)
+        }
     }
 
     // Parse roast text
