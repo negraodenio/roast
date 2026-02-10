@@ -17,7 +17,10 @@ export async function POST(request: NextRequest) {
         }
 
         // Validar estrutura de roastData
-        const { url, score, roastText, timestamp } = roastData as RoastReportData
+        const { url, score, roastText, timestamp, subScores, audits } = roastData as RoastReportData & {
+            subScores?: any
+            audits?: any
+        }
         if (!url || score === undefined || !roastText) {
             return NextResponse.json(
                 { error: 'Invalid roastData structure' },
@@ -34,7 +37,8 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // Gerar o PDF
+        // Gerar o PDF com dados estruturados
+        // @ts-ignore - RoastPdf returns JSX that renderToBuffer can handle
         const pdfStream = await renderToBuffer(
             RoastPdf({
                 url,
@@ -42,6 +46,8 @@ export async function POST(request: NextRequest) {
                 roastText,
                 timestamp: timestamp || new Date().toISOString(),
                 isPremium,
+                subScores,
+                audits,
             })
         )
 
