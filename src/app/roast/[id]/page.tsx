@@ -36,10 +36,32 @@ export default async function RoastResultPage({ params }: { params: { id: string
     const isAgency = profile?.plan === 'agency'
     const showFullDetails = isOwner || isAgency || roast.paid || false
 
+    // Parse roast text first so we can include the clean version in safeRoast
+    let headline = "Your Website Sucks."
+    let roastBody = ""
+    try {
+        const rawRoast = roast.roast_text
+        if (rawRoast && typeof rawRoast === 'object') {
+            headline = rawRoast.headline || headline
+            roastBody = rawRoast.roast || ""
+        } else if (typeof rawRoast === 'string') {
+            try {
+                const parsed = JSON.parse(rawRoast)
+                headline = parsed.headline || headline
+                roastBody = parsed.roast || rawRoast
+            } catch {
+                roastBody = rawRoast
+            }
+        }
+    } catch (e) {
+        console.error("Error parsing roast text:", e)
+    }
+
     // Mask audit data if locked to prevent HTML scraping of unlocked content
     // But keep scores and top 2 issues for the "Teaser PDF" and visual preview
-    const safeRoast = showFullDetails ? roast : {
+    const safeRoast = showFullDetails ? { ...roast, roast_text: roastBody } : {
         ...roast,
+        roast_text: roastBody, // Inject parsed text
         ux_audit: {
             ...roast.ux_audit,
             issues: roast.ux_audit?.issues?.slice(0, 2)
@@ -62,26 +84,7 @@ export default async function RoastResultPage({ params }: { params: { id: string
         }
     }
 
-    // Parse roast text
-    let headline = "Your Website Sucks."
-    let roastBody = ""
-    try {
-        const rawRoast = roast.roast_text
-        if (rawRoast && typeof rawRoast === 'object') {
-            headline = rawRoast.headline || headline
-            roastBody = rawRoast.roast || ""
-        } else if (typeof rawRoast === 'string') {
-            try {
-                const parsed = JSON.parse(rawRoast)
-                headline = parsed.headline || headline
-                roastBody = parsed.roast || rawRoast
-            } catch {
-                roastBody = rawRoast
-            }
-        }
-    } catch (e) {
-        console.error("Error parsing roast text:", e)
-    }
+
 
     // Prepare sub-scores for credibility
     const subScores = {
