@@ -232,13 +232,39 @@ export async function POST(req: NextRequest) {
         const cro = parseJSON(croRaw, 60)
         const security = parseJSON(securityRaw, 70)
 
-        const finalScore = roast.score || 50
+        // Calculate final score
+        const finalScore = Math.round((roast.score + ux.score + seo.score + copy.score + cro.score + security.score) / 6)
 
-        // 5. Save to DB
+        console.log('📊 Final Calculations:', {
+            finalScore,
+            roastScore: roast.score,
+            uxScore: ux.score,
+            seoScore: seo.score,
+            copyScore: copy.score,
+            croScore: cro.score,
+            securityScore: security.score
+        })
+
+        // 6. Save to DB using service role
         const supabaseAdmin = createSupabaseClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
             process.env.SUPABASE_SERVICE_ROLE_KEY!
         )
+
+        // Log what we're about to insert
+        console.log('💾 Preparing DB insert:', {
+            user_id: userId || null,
+            url: validUrl.toString(),
+            score: finalScore,
+            has_roast: !!roast,
+            has_ux: !!ux,
+            has_seo: !!seo,
+            has_copy: !!copy,
+            has_cro: !!cro,
+            has_security: !!security,
+            is_public: isPublic ?? true,
+            tone
+        })
 
         const { data: roastRecord, error: dbError } = await supabaseAdmin
             .from('roasts')
@@ -260,8 +286,16 @@ export async function POST(req: NextRequest) {
 
 
         if (dbError) {
-            console.error('DB Insert Error:', dbError)
-            return NextResponse.json({ error: 'Failed to save roast result' }, { status: 500 })
+            console.error('❌ DB Insert Error:', {
+                message: dbError.message,
+                details: dbError.details,
+                hint: dbError.hint,
+                code: dbError.code
+            })
+            return NextResponse.json({
+                error: 'Failed to save roast result',
+                details: dbError.message
+            }, { status: 500 })
         }
 
         // Decrement credits
