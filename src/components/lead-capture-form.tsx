@@ -38,7 +38,8 @@ export function LeadCaptureForm({ roastId, url, score, roastText, subScores, aud
                         roastText,
                         subScores,
                         audits,
-                        timestamp: new Date().toISOString()
+                        timestamp: new Date().toISOString(),
+                        roastId
                     },
                     isPremium: false // Freemium report with 25% text
                 })

@@ -8,6 +8,12 @@ export async function POST(request: NextRequest) {
         const body = await request.json()
         const { email, roastData, isPremium = false } = body
 
+        console.log(`📧 Sending report to ${email}`)
+        console.log(`📦 RoastData keys: ${Object.keys(roastData).join(', ')}`)
+        console.log(`📊 SubScores present: ${!!roastData.subScores}`)
+        console.log(`📝 Audits present: ${!!roastData.audits}`)
+        if (roastData.subScores) console.log('SubScores:', JSON.stringify(roastData.subScores))
+
         // Validação básica
         if (!email || !roastData) {
             return NextResponse.json(
@@ -17,9 +23,10 @@ export async function POST(request: NextRequest) {
         }
 
         // Validar estrutura de roastData
-        const { url, score, roastText, timestamp, subScores, audits } = roastData as RoastReportData & {
+        const { url, score, roastText, timestamp, subScores, audits, roastId } = roastData as RoastReportData & {
             subScores?: any
             audits?: any
+            roastId?: string
         }
         if (!url || score === undefined || !roastText) {
             return NextResponse.json(
@@ -59,6 +66,7 @@ export async function POST(request: NextRequest) {
                 score,
                 roastText,
                 timestamp: timestamp || new Date().toISOString(),
+                roastId
             },
             pdfStream
         )
