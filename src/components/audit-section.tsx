@@ -2,8 +2,9 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, Info, Lock } from "lucide-react"
+import { AlertCircle, Info, Lock, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { LeadCaptureForm } from "./lead-capture-form"
 
 interface AuditSectionProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,21 +16,49 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
 
     if (isLocked) {
         return (
-            <div className="relative mt-12 w-full max-w-4xl mx-auto">
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-950/60 backdrop-blur-md rounded-xl border border-zinc-800 p-8 text-center">
-                    <Lock className="w-16 h-16 text-primary mb-4" />
-                    <h3 className="text-3xl font-bold mb-2">Unlock the Full Audit</h3>
-                    <p className="text-zinc-400 mb-6 max-w-md">
-                        Get detailed UX, SEO, and Copywriting analysis, plus 10 actionable conversion tips to fix your site.
+            <div className="relative mt-8 w-full max-w-4xl mx-auto group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-purple-600/30 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+
+                <div className="relative z-10 flex flex-col items-center justify-center bg-zinc-950/80 backdrop-blur-xl rounded-2xl border border-zinc-800 p-8 md:p-12 text-center shadow-2xl">
+                    <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mb-6 border border-primary/20 rotate-3">
+                        <Lock className="w-10 h-10 text-primary -rotate-3" />
+                    </div>
+
+                    <h3 className="text-3xl font-black text-white mb-3 tracking-tight">Unlock the Full Audit</h3>
+                    <p className="text-zinc-400 mb-8 max-w-md text-balance leading-relaxed">
+                        Get the detailed **UX, SEO, and Copywriting** analysis, plus **10 actionable tips** to boost your conversion rate.
                     </p>
-                    <Button size="lg" className="bg-primary text-primary-foreground font-bold text-lg px-8 py-6 rounded-full shadow-lg hover:scale-105 transition-transform">
-                        Unlock for $9.99
-                    </Button>
-                    <p className="mt-4 text-sm text-zinc-500">Or get unlimited audits with Agency Plan</p>
+
+                    <div className="w-full max-w-sm space-y-8">
+                        {/* Phase 1: Lead Capture (Email) */}
+                        <LeadCaptureForm
+                            roastId={roast.id}
+                            url={roast.url}
+                            score={roast.score}
+                            roastText={roast.roast_text?.roast || roast.roast_text || ""}
+                        />
+
+                        <div className="flex items-center gap-4 py-4">
+                            <div className="h-px flex-1 bg-zinc-800" />
+                            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">or</span>
+                            <div className="h-px flex-1 bg-zinc-800" />
+                        </div>
+
+                        {/* Phase 2: Instant Access (Paid) */}
+                        <div className="space-y-4">
+                            <Button size="lg" className="w-full bg-white text-black hover:bg-zinc-200 font-black text-lg h-14 rounded-2xl transition-all flex items-center justify-center gap-2">
+                                <Sparkles className="w-5 h-5 fill-current" />
+                                Instant Full Access $9.99
+                            </Button>
+                            <p className="text-xs text-zinc-500 font-medium">
+                                No email? Get the full dashboard access immediately.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Blurred dummy content */}
-                <div className="opacity-20 filter blur-sm pointer-events-none select-none">
+                <div className="opacity-10 filter blur-md pointer-events-none select-none mt-12">
                     <Tabs defaultValue="ux" className="w-full">
                         <TabsList className="grid w-full grid-cols-5 bg-zinc-900/50">
                             <TabsTrigger value="ux">UX Audit</TabsTrigger>
