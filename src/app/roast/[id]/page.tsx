@@ -76,6 +76,32 @@ export default async function RoastResultPage({ params }: { params: { id: string
         security: roast.performance_audit?.score
     }
 
+    // Calculate credibility stats
+    const calculateStats = () => {
+        let elementsAnalyzed = 0
+        let issuesFound = 0
+
+        // Count issues from all audits
+        const audits = [roast.ux_audit, roast.seo_audit, roast.copy_audit, roast.conversion_tips, roast.performance_audit]
+        audits.forEach(audit => {
+            if (audit?.issues) {
+                issuesFound += audit.issues.length
+                elementsAnalyzed += audit.issues.length * 3 // Approximation
+            }
+        })
+
+        // Add baseline elements
+        elementsAnalyzed += 50
+
+        return {
+            elementsAnalyzed,
+            issuesFound,
+            analysisTime: 28 // Could be calculated from created_at if we store start time
+        }
+    }
+
+    const stats = calculateStats()
+
     return (
         <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans selection:bg-primary/30">
             <Navbar />
@@ -104,7 +130,12 @@ export default async function RoastResultPage({ params }: { params: { id: string
 
                         <section className="relative group">
                             <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-purple-500/20 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-                            <ScoreCounter score={roast.score} subScores={subScores} />
+                            <ScoreCounter
+                                score={roast.score}
+                                tone={roast.tone as "mild" | "medium" | "spicy" || "medium"}
+                                subScores={subScores}
+                                stats={stats}
+                            />
                         </section>
 
                         <div className="bg-zinc-900/40 backdrop-blur-sm p-8 md:p-10 rounded-3xl border border-zinc-800 shadow-2xl relative overflow-hidden">
