@@ -32,10 +32,10 @@ export async function POST(req: NextRequest) {
 
         // 2. Check cache for recent analysis (within 24h)
         console.time('🔍 Cache Check')
-        const supabaseForCache = await createClient() // Renamed to avoid conflict with later declaration
+        const supabase = await createClient()
         const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
 
-        const { data: cachedRoast } = await supabaseForCache
+        const { data: cachedRoast } = await supabase
             .from('roasts')
             .select('*')
             .eq('url', validUrl.toString())
@@ -53,8 +53,7 @@ export async function POST(req: NextRequest) {
         }
         console.log('❌ Cache MISS - running fresh analysis')
 
-        // 2. Auth Check & Credits
-        const supabase = createClient()
+        // 3. Auth Check & Credits
         const { data: { user } } = await supabase.auth.getUser()
 
         const userId = user?.id
