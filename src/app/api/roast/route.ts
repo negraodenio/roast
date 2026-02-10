@@ -111,6 +111,7 @@ export async function POST(req: NextRequest) {
         const roastPromise = callSiliconFlow(
             DEFAULT_MODELS.roast,
             `${toneInstructions[tone as keyof typeof toneInstructions] || toneInstructions.medium}
+             Always respond in English.
              Return JSON only: { "score": number (0-100), "headline": string, "roast": string (markdown), "tldr": string }`,
             `Roast this site:\n${siteContext}`
         )
@@ -118,7 +119,7 @@ export async function POST(req: NextRequest) {
         // UX Audit Task
         const uxPromise = callSiliconFlow(
             DEFAULT_MODELS.ux,
-            `You are a UX expert. Analyze the site context.
+            `You are a UX expert. Analyze the site context. Always respond in English.
              Return JSON only: { 
                 "score": number (0-100), 
                 "summary": "Short summary of UX state",
@@ -135,7 +136,7 @@ export async function POST(req: NextRequest) {
         // SEO Audit Task
         const seoPromise = callSiliconFlow(
             DEFAULT_MODELS.seo,
-            `You are an SEO expert. Analyze the site context.
+            `You are an SEO expert. Analyze the site context. Always respond in English.
              Return JSON only: { 
                 "score": number (0-100), 
                 "summary": "Short summary of SEO state",
