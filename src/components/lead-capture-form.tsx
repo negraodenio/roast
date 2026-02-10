@@ -35,7 +35,6 @@ export function LeadCaptureForm({ roastId, url, score, roastText, subScores, aud
                     roastData: {
                         url,
                         score,
-                        score,
                         roastText,
                         subScores,
                         audits,
