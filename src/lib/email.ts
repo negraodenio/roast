@@ -16,7 +16,10 @@ export async function sendRoastReport(
     pdfBuffer: Buffer
 ) {
     try {
-        subject: `🔥 Your Roast Report is ready! Score: ${roastData.score}/100`,
+        const { data, error } = await resend.emails.send({
+            from: 'Roasty <noreply@roastthis.site>',
+            to: recipientEmail,
+            subject: `🔥 Your Roast Report is ready! Score: ${roastData.score}/100`,
             html: `
 <!DOCTYPE html>
 <html>
@@ -84,22 +87,22 @@ export async function sendRoastReport(
 </body>
 </html>
             `,
-                attachments: [
-                    {
-                        filename: `roast-report-${roastData.score}.pdf`,
-                        content: pdfBuffer,
-                    },
-                ],
+            attachments: [
+                {
+                    filename: `roast-report-${roastData.score}.pdf`,
+                    content: pdfBuffer,
+                },
+            ],
         })
 
-    if (error) {
-        console.error('Resend error:', error)
-        throw new Error(`Failed to send email: ${error.message}`)
-    }
+        if (error) {
+            console.error('Resend error:', error)
+            throw new Error(`Failed to send email: ${error.message}`)
+        }
 
-    return { success: true, emailId: data?.id }
-} catch (error) {
-    console.error('Email sending error:', error)
-    throw error
-}
+        return { success: true, emailId: data?.id }
+    } catch (error) {
+        console.error('Email sending error:', error)
+        throw error
+    }
 }
