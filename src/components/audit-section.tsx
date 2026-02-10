@@ -36,6 +36,20 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                             url={roast.url}
                             score={roast.score}
                             roastText={roast.roast_text?.roast || roast.roast_text || ""}
+                            subScores={{
+                                ux: roast.ux_audit?.score,
+                                seo: roast.seo_audit?.score,
+                                copy: roast.copy_audit?.score,
+                                conversion: roast.conversion_tips?.score,
+                                security: roast.performance_audit?.score
+                            }}
+                            audits={{
+                                ux: roast.ux_audit,
+                                seo: roast.seo_audit,
+                                copy: roast.copy_audit,
+                                conversion: roast.conversion_tips,
+                                security: roast.performance_audit
+                            }}
                         />
 
                         <div className="flex items-center gap-4 py-4">
