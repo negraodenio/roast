@@ -2,9 +2,15 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, Info, Lock, Sparkles } from "lucide-react"
+import { AlertCircle, Info, Lock, Sparkles, Scale, Gavel, ShieldAlert } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LeadCaptureForm } from "./lead-capture-form"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface AuditSectionProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -121,22 +127,36 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                             <CardDescription>{roast.ux_audit?.summary || "Analyzing UX patterns..."}</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {roast.ux_audit?.issues?.map((issue: any, i: number) => (
-                                <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
-                                    <div className="flex items-center gap-2 font-bold mb-1">
-                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> : <Info className="text-yellow-500 w-5 h-5 shrink-0" />}
-                                        {issue.title}
+                            <TooltipProvider>
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {roast.ux_audit?.issues?.map((issue: any, i: number) => (
+                                    <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
+                                        <div className="flex items-center gap-2 font-bold mb-1">
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <div className="cursor-help">
+                                                        {issue.severity === 'critical' ?
+                                                            <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> :
+                                                            <Info className="text-yellow-500 w-5 h-5 shrink-0" />
+                                                        }
+                                                    </div>
+                                                </TooltipTrigger>
+                                                <TooltipContent className="bg-zinc-800 border-zinc-700 text-white font-medium">
+                                                    <p>{issue.severity === 'critical' ? 'Critical issue requiring immediate attention' : 'Moderate issue for optimization'}</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                            {issue.title}
+                                        </div>
+                                        <div className="text-sm text-zinc-400 mb-2 pl-7">
+                                            <span className="font-semibold text-zinc-300">Why it matters:</span> {issue.description}
+                                        </div>
+                                        <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
+                                            <strong className="block mb-1">How to Fix:</strong>
+                                            {issue.fix}
+                                        </div>
                                     </div>
-                                    <div className="text-sm text-zinc-400 mb-2 pl-7">
-                                        <span className="font-semibold text-zinc-300">Why it matters:</span> {issue.description}
-                                    </div>
-                                    <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
-                                        <strong className="block mb-1">How to Fix:</strong>
-                                        {issue.fix}
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </TooltipProvider>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -151,22 +171,36 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                             <CardDescription>{roast.seo_audit?.summary || "Analyzing search visibility..."}</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {roast.seo_audit?.issues?.map((issue: any, i: number) => (
-                                <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
-                                    <div className="flex items-center gap-2 font-bold mb-1">
-                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> : <Info className="text-yellow-500 w-5 h-5 shrink-0" />}
-                                        {issue.title}
+                            <TooltipProvider>
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {roast.seo_audit?.issues?.map((issue: any, i: number) => (
+                                    <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
+                                        <div className="flex items-center gap-2 font-bold mb-1">
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <div className="cursor-help">
+                                                        {issue.severity === 'critical' ?
+                                                            <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> :
+                                                            <Info className="text-yellow-500 w-5 h-5 shrink-0" />
+                                                        }
+                                                    </div>
+                                                </TooltipTrigger>
+                                                <TooltipContent className="bg-zinc-800 border-zinc-700 text-white font-medium">
+                                                    <p>{issue.severity === 'critical' ? 'Critical SEO blocker found' : 'SEO improvement opportunity'}</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                            {issue.title}
+                                        </div>
+                                        <div className="text-sm text-zinc-400 mb-2 pl-7">
+                                            <span className="font-semibold text-zinc-300">Impact:</span> {issue.description}
+                                        </div>
+                                        <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
+                                            <strong className="block mb-1">Technical Fix:</strong>
+                                            {issue.fix}
+                                        </div>
                                     </div>
-                                    <div className="text-sm text-zinc-400 mb-2 pl-7">
-                                        <span className="font-semibold text-zinc-300">Impact:</span> {issue.description}
-                                    </div>
-                                    <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
-                                        <strong className="block mb-1">Technical Fix:</strong>
-                                        {issue.fix}
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </TooltipProvider>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -181,22 +215,36 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                             <CardDescription>{roast.copy_audit?.summary || "Analyzing messaging and persuasion..."}</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {roast.copy_audit?.issues?.map((issue: any, i: number) => (
-                                <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
-                                    <div className="flex items-center gap-2 font-bold mb-1">
-                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> : <Info className="text-yellow-500 w-5 h-5 shrink-0" />}
-                                        {issue.title}
+                            <TooltipProvider>
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {roast.copy_audit?.issues?.map((issue: any, i: number) => (
+                                    <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
+                                        <div className="flex items-center gap-2 font-bold mb-1">
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <div className="cursor-help">
+                                                        {issue.severity === 'critical' ?
+                                                            <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> :
+                                                            <Info className="text-yellow-500 w-5 h-5 shrink-0" />
+                                                        }
+                                                    </div>
+                                                </TooltipTrigger>
+                                                <TooltipContent className="bg-zinc-800 border-zinc-700 text-white font-medium">
+                                                    <p>{issue.severity === 'critical' ? 'High-risk messaging gap' : 'Messaging enhancement'}</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                            {issue.title}
+                                        </div>
+                                        <div className="text-sm text-zinc-400 mb-2 pl-7">
+                                            <span className="font-semibold text-zinc-300">Why it matters:</span> {issue.description}
+                                        </div>
+                                        <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
+                                            <strong className="block mb-1">How to Fix:</strong>
+                                            {issue.fix}
+                                        </div>
                                     </div>
-                                    <div className="text-sm text-zinc-400 mb-2 pl-7">
-                                        <span className="font-semibold text-zinc-300">Why it matters:</span> {issue.description}
-                                    </div>
-                                    <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
-                                        <strong className="block mb-1">How to Fix:</strong>
-                                        {issue.fix}
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </TooltipProvider>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -211,22 +259,36 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                             <CardDescription>{roast.conversion_tips?.summary || "Analyzing conversion triggers..."}</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {roast.conversion_tips?.issues?.map((issue: any, i: number) => (
-                                <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
-                                    <div className="flex items-center gap-2 font-bold mb-1">
-                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> : <Info className="text-yellow-500 w-5 h-5 shrink-0" />}
-                                        {issue.title}
+                            <TooltipProvider>
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {roast.conversion_tips?.issues?.map((issue: any, i: number) => (
+                                    <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
+                                        <div className="flex items-center gap-2 font-bold mb-1">
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <div className="cursor-help">
+                                                        {issue.severity === 'critical' ?
+                                                            <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> :
+                                                            <Info className="text-yellow-500 w-5 h-5 shrink-0" />
+                                                        }
+                                                    </div>
+                                                </TooltipTrigger>
+                                                <TooltipContent className="bg-zinc-800 border-zinc-700 text-white font-medium">
+                                                    <p>{issue.severity === 'critical' ? 'Critical conversion blocker' : 'Conversion optimization tip'}</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                            {issue.title}
+                                        </div>
+                                        <div className="text-sm text-zinc-400 mb-2 pl-7">
+                                            <span className="font-semibold text-zinc-300">Profit Impact:</span> {issue.description}
+                                        </div>
+                                        <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
+                                            <strong className="block mb-1">Action Plan:</strong>
+                                            {issue.fix}
+                                        </div>
                                     </div>
-                                    <div className="text-sm text-zinc-400 mb-2 pl-7">
-                                        <span className="font-semibold text-zinc-300">Profit Impact:</span> {issue.description}
-                                    </div>
-                                    <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
-                                        <strong className="block mb-1">Action Plan:</strong>
-                                        {issue.fix}
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </TooltipProvider>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -239,23 +301,74 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                             </CardTitle>
                             <CardDescription>{roast.performance_audit?.summary || "Analyzing site security and legal compliance..."}</CardDescription>
                         </CardHeader>
-                        <CardContent className="space-y-4">
-                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                            {roast.performance_audit?.issues?.map((issue: any, i: number) => (
-                                <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
-                                    <div className="flex items-center gap-2 font-bold mb-1">
-                                        {issue.severity === 'critical' ? <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> : <Info className="text-yellow-500 w-5 h-5 shrink-0" />}
-                                        {issue.title}
+                        <CardContent className="space-y-6">
+                            <TooltipProvider>
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {roast.performance_audit?.issues?.map((issue: any, i: number) => (
+                                    <div key={i} className="p-4 rounded-lg bg-black/20 border border-zinc-800">
+                                        <div className="flex items-center gap-2 font-bold mb-1">
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <div className="cursor-help">
+                                                        {issue.severity === 'critical' ?
+                                                            <AlertCircle className="text-red-500 w-5 h-5 shrink-0" /> :
+                                                            <Info className="text-yellow-500 w-5 h-5 shrink-0" />
+                                                        }
+                                                    </div>
+                                                </TooltipTrigger>
+                                                <TooltipContent className="bg-zinc-800 border-zinc-700 text-white font-medium">
+                                                    <p>{issue.severity === 'critical' ? 'High security/compliance risk' : 'Standard compliance item'}</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                            {issue.title}
+                                        </div>
+                                        <div className="text-sm text-zinc-400 mb-2 pl-7">
+                                            <span className="font-semibold text-zinc-300">Analysis:</span> {issue.description}
+                                        </div>
+                                        <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
+                                            <strong className="block mb-1">Action:</strong>
+                                            {issue.fix}
+                                        </div>
                                     </div>
-                                    <div className="text-sm text-zinc-400 mb-2 pl-7">
-                                        <span className="font-semibold text-zinc-300">Analysis:</span> {issue.description}
+                                ))}
+                            </TooltipProvider>
+
+                            {/* LGPD Compliance Penalty Info */}
+                            <div className="relative overflow-hidden p-6 mt-8 rounded-2xl bg-gradient-to-br from-red-600/10 to-transparent border border-red-500/20">
+                                <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                                    <Scale className="w-24 h-24" />
+                                </div>
+                                <h4 className="flex items-center gap-2 text-red-500 font-black uppercase tracking-tighter text-lg mb-4">
+                                    <ShieldAlert className="w-5 h-5" />
+                                    LGPD Fine Calculation
+                                </h4>
+                                <div className="space-y-4">
+                                    <div className="flex items-start gap-4 p-4 rounded-xl bg-black/40 border border-zinc-800">
+                                        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                                            <Gavel className="w-6 h-6 text-red-500" />
+                                        </div>
+                                        <div>
+                                            <p className="text-zinc-200 font-bold mb-1">Maximum Penalty (Per Violation)</p>
+                                            <p className="font-mono text-2xl text-white font-black">2% <span className="text-red-500">of annual revenue</span></p>
+                                            <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest mt-1">Capped at R$ 50.000.000,00</p>
+                                        </div>
                                     </div>
-                                    <div className="text-sm bg-green-500/10 text-green-400 p-3 rounded border border-green-500/20 ml-7">
-                                        <strong className="block mb-1">Action:</strong>
-                                        {issue.fix}
+
+                                    <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800">
+                                        <p className="text-zinc-400 text-xs mb-3 italic">Based on your compliance score of <span className="text-red-500 font-bold">{roast.performance_audit?.score ?? 0}/100</span>, the estimated legal exposure is high due to missing fundamental pages.</p>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-1">
+                                                <p className="text-[9px] text-zinc-500 font-black uppercase tracking-widest">Formula</p>
+                                                <p className="text-sm font-mono text-zinc-300 font-bold">Fine = Revenue * 0.02</p>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <p className="text-[9px] text-zinc-500 font-black uppercase tracking-widest">Action Required</p>
+                                                <p className="text-sm text-green-500 font-bold">Compliance Patch V1</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            ))}
+                            </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
