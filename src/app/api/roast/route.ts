@@ -111,7 +111,14 @@ export async function POST(req: NextRequest) {
         const roastPromise = callSiliconFlow(
             DEFAULT_MODELS.roast,
             `${toneInstructions[tone as keyof typeof toneInstructions] || toneInstructions.medium}
-             Always respond in English.
+             
+             FORMATTING RULES (STRICT):
+             - Act as a "Master Marketing Creator". 
+             - Use EMOJIS for every section header (e.g., 💀, 📉, 🚨).
+             - Use **Bold** for key stats and fails.
+             - Keep paragraphs short and punchy.
+             - Add double line breaks between sections for maximum readability.
+             
              Return JSON only: { "score": number (0-100), "headline": string, "roast": string (markdown), "tldr": string }`,
             `Roast this site:\n${siteContext}`
         )
