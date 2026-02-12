@@ -165,8 +165,13 @@ export function ScoreCounter({ score, tone = "medium", subScores, stats }: Score
                 </div>
             )}
 
-            <div className="mt-6 text-[10px] text-zinc-600 uppercase tracking-widest font-bold z-10">
-                Powered by DeepSeek V3 AI
+            <div className="mt-6 flex items-center gap-2 text-[10px] text-zinc-600 uppercase tracking-widest font-bold z-10">
+                powered BY Roast
+                <img
+                    src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f621/512.gif"
+                    alt="😡"
+                    className="w-4 h-4"
+                />
             </div>
         </div>
     )
