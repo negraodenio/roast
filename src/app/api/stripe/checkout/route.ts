@@ -23,15 +23,21 @@ export async function POST(req: NextRequest) {
         const supabase = createClient()
         const { data: { user } } = await supabase.auth.getUser()
 
-        if (!user) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-        }
-
         const priceAgency = process.env.STRIPE_PRICE_AGENCY_MONTHLY
+        const priceSingle = process.env.STRIPE_PRICE_SINGLE_REPORT
+
+        const finalPriceId = priceId || priceSingle
+
+        if (!finalPriceId) {
+            return NextResponse.json({ error: 'Stripe is not fully configured.' }, { status: 500 })
+        }
 
         // Determine mode
         let mode: Stripe.Checkout.SessionCreateParams.Mode = 'payment'
-        if (priceId === priceAgency) {
+        if (finalPriceId === priceAgency) {
+            if (!user) {
+                return NextResponse.json({ error: 'Unauthorized. Please login to subscribe.' }, { status: 401 })
+            }
             mode = 'subscription'
         } else {
             mode = 'payment'
@@ -41,16 +47,16 @@ export async function POST(req: NextRequest) {
             payment_method_types: ['card'],
             line_items: [
                 {
-                    price: priceId,
+                    price: finalPriceId,
                     quantity: 1,
                 },
             ],
             mode: mode,
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/roast/${roastId}?upgraded=true`,
+            success_url: roastId ? `${process.env.NEXT_PUBLIC_APP_URL}/roast/${roastId}?upgraded=true` : `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?upgraded=true`,
             cancel_url: roastId ? `${process.env.NEXT_PUBLIC_APP_URL}/roast/${roastId}` : `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/billing`,
-            customer_email: user.email,
+            customer_email: user?.email || undefined,
             metadata: {
-                userId: user.id,
+                userId: user?.id || null,
                 roastId: roastId || '',
                 plan: mode === 'subscription' ? 'agency' : 'single'
             },

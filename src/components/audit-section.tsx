@@ -2,9 +2,11 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, Info, Lock, Sparkles, Scale, Gavel, ShieldAlert, Eye, Search, ShieldCheck, Target, Zap, TrendingUp, AlertTriangle, ArrowLeft } from "lucide-react"
+import { AlertCircle, Info, Lock, Sparkles, Scale, Gavel, ShieldAlert, Eye, Search, ShieldCheck, Target, Zap, TrendingUp, AlertTriangle, ArrowLeft, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LeadCaptureForm } from "./lead-capture-form"
+import { useState } from "react"
+import { useToast } from "@/hooks/use-toast"
 import {
     Tooltip,
     TooltipContent,
@@ -21,6 +23,34 @@ interface AuditSectionProps {
 }
 
 export function AuditSection({ roast, isLocked }: AuditSectionProps) {
+    const [isCheckoutLoading, setIsCheckoutLoading] = useState(false)
+    const { toast } = useToast()
+
+    const handleCheckout = async () => {
+        setIsCheckoutLoading(true)
+        try {
+            const res = await fetch('/api/stripe/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ roastId: roast.id })
+            })
+
+            const data = await res.json()
+            if (!res.ok) throw new Error(data.error || 'Failed to initialize checkout')
+            if (data.url) {
+                window.location.href = data.url
+            }
+        } catch (error: any) {
+            console.error('Checkout error:', error)
+            toast({
+                title: 'Checkout Error',
+                description: error.message || 'Could not start checkout.',
+                variant: 'destructive'
+            })
+        } finally {
+            setIsCheckoutLoading(false)
+        }
+    }
 
     if (isLocked) {
         return (
@@ -66,9 +96,14 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         </div>
 
                         <div className="space-y-4">
-                            <Button size="lg" className="w-full bg-white text-black hover:bg-zinc-200 font-black text-lg h-14 rounded-2xl transition-all flex items-center justify-center gap-2">
-                                <Sparkles className="w-5 h-5 fill-current" />
-                                Instant Full Access $9.99
+                            <Button
+                                size="lg"
+                                className="w-full bg-white text-black hover:bg-zinc-200 font-black text-lg h-14 rounded-2xl transition-all flex items-center justify-center gap-2"
+                                onClick={handleCheckout}
+                                disabled={isCheckoutLoading}
+                            >
+                                {isCheckoutLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 fill-current" />}
+                                {isCheckoutLoading ? "Loading..." : "Instant Full Access $9.99"}
                             </Button>
                             <p className="text-xs text-zinc-500 font-medium">
                                 No email? Get the full dashboard access immediately.
