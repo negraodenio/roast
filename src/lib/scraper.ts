@@ -39,11 +39,20 @@ export async function scrapeWebsite(url: string): Promise<ScrapeResult> {
 
         clearTimeout(timeoutId)
 
+        if (response.status === 403 || response.status === 429) {
+            throw new Error(`This website is blocking my access (Error ${response.status}). Many sites use Cloudflare or other anti-bot measures.`)
+        }
+
         if (!response.ok) {
             throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`)
         }
 
         const html = await response.text()
+
+        if (html.includes('Cloudflare') && html.includes('captcha')) {
+            throw new Error("This site is using Cloudflare protection. I can't bypass their firewall (yet!).")
+        }
+
         const $ = cheerio.load(html)
 
         // Remove scripts, styles, and comments to clean up text

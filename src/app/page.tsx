@@ -123,6 +123,63 @@ export default async function Home() {
                     </div>
                 </section>
 
+                {/* Pricing Section */}
+                <section className="py-24 bg-black relative overflow-hidden border-t border-zinc-900">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/10 rounded-full blur-[120px] -z-10" />
+
+                    <div className="container mx-auto px-4">
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-5xl font-black mb-4">Simple, Brutal Pricing</h2>
+                            <p className="text-zinc-400 max-w-xl mx-auto">
+                                No hidden fees. Just the truth your designers are too afraid to tell you.
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                            {/* Single Roast */}
+                            <div className="p-8 rounded-3xl bg-zinc-900/50 border border-zinc-800 flex flex-col items-center text-center relative group hover:border-red-500/50 transition-all">
+                                <div className="absolute top-0 right-0 bg-red-600 text-white text-[10px] uppercase font-black px-3 py-1 rounded-bl-xl tracking-widest">Most Popular</div>
+                                <h3 className="text-2xl font-black mb-2 uppercase tracking-tighter">Single Roast</h3>
+                                <div className="text-5xl font-black mb-4 text-white">9,99€</div>
+                                <p className="text-zinc-500 text-sm mb-8 italic">"The reality check your site needs."</p>
+
+                                <ul className="space-y-4 text-left w-full mb-10 text-zinc-300">
+                                    <li className="flex items-center gap-3"><span className="text-red-500 font-bold">✓</span> Full UX/SEO/Copy Roast</li>
+                                    <li className="flex items-center gap-3"><span className="text-red-500 font-bold">✓</span> 10 Actionable Fixes</li>
+                                    <li className="flex items-center gap-3"><span className="text-red-500 font-bold">✓</span> PDF Export (Basic)</li>
+                                    <li className="flex items-center gap-3"><span className="text-red-500 font-bold">✓</span> Lifetime Access to Report</li>
+                                </ul>
+
+                                <Link href="#" className="w-full">
+                                    <Button className="w-full bg-white text-black hover:bg-zinc-200 font-black h-14 rounded-2xl text-lg uppercase tracking-widest">
+                                        Get Started
+                                    </Button>
+                                </Link>
+                            </div>
+
+                            {/* Agency Plan */}
+                            <div className="p-8 rounded-3xl bg-black border border-zinc-800 flex flex-col items-center text-center hover:border-zinc-500 transition-all">
+                                <h3 className="text-2xl font-black mb-2 uppercase tracking-tighter">Agency</h3>
+                                <div className="text-5xl font-black mb-4 text-white">49€<span className="text-2xl text-zinc-600">/mo</span></div>
+                                <p className="text-zinc-500 text-sm mb-8 italic">"Roast your clients into submission."</p>
+
+                                <ul className="space-y-4 text-left w-full mb-10 text-zinc-300">
+                                    <li className="flex items-center gap-3"><span className="text-zinc-500 font-bold">✓</span> Unlimited Roasts</li>
+                                    <li className="flex items-center gap-3"><span className="text-zinc-500 font-bold">✓</span> White-label Reports</li>
+                                    <li className="flex items-center gap-3"><span className="text-zinc-500 font-bold">✓</span> Custom Expert Persona</li>
+                                    <li className="flex items-center gap-3"><span className="text-zinc-500 font-bold">✓</span> API Access</li>
+                                </ul>
+
+                                <Link href="#" className="w-full">
+                                    <Button variant="outline" className="w-full border-zinc-700 text-white hover:bg-zinc-800 font-black h-14 rounded-2xl text-lg uppercase tracking-widest">
+                                        Go Pro
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Recent Roasts */}
                 <section className="py-20 bg-zinc-950/50 border-t border-zinc-900">
                     <div className="container mx-auto px-4">

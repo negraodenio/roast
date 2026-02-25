@@ -36,15 +36,18 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     // Access control for detailed audits
     let showFullDetails = false
 
-    if (isOwner) {
-        // Owner always sees full details? Or only if they paid?
-        // "If user owns it: return everything" - from prompt
+    if (roast.paid) {
         showFullDetails = true
-    } else {
-        // Public viewer
-        // "If user has paid for this roast or is agency: return everything unlocked"
-        // "Otherwise: return roast + blurred/truncated audit previews"
-        if (roast.paid) {
+    } else if (userId && roast.user_id === userId) {
+        // Even owners must pay unless they have an agency plan
+        // Check user plan
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('plan')
+            .eq('id', userId)
+            .single()
+
+        if (profile?.plan === 'agency') {
             showFullDetails = true
         }
     }

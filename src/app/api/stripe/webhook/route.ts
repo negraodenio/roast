@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
+import { sendPaymentConfirmation } from '@/lib/email'
 
 // Lazy Stripe initialization to prevent build-time errors
 function getStripe() {
@@ -44,15 +45,54 @@ export async function POST(req: NextRequest) {
 
         if (plan === 'single' && roastId) {
             // Unlock single roast
-            await supabase
+            // Audit Skill Tip: Idempotency check
+            const { data: existing } = await supabase
                 .from('roasts')
-                .update({ paid: true })
+                .select('paid')
                 .eq('id', roastId)
+                .single()
+
+            if (existing && !existing.paid) {
+                await supabase
+                    .from('roasts')
+                    .update({ paid: true })
+                    .eq('id', roastId)
+
+                // Send Email Confirmation
+                if (session.customer_details?.email) {
+                    await sendPaymentConfirmation(session.customer_details.email, {
+                        customerName: session.customer_details.name || undefined,
+                        planName: 'Single Roast Report',
+                        amount: '9,99€',
+                        roastUrl: session.metadata.roastUrl // Assuming we add this or use website_url
+                    })
+                }
+            }
         } else if (plan === 'agency' && userId) {
             // Upgrade user to agency
             await supabase
                 .from('profiles')
                 .update({ plan: 'agency', credits: -1 }) // -1 implies unlimited
+                .eq('id', userId)
+
+            // Send Email Confirmation
+            if (session.customer_details?.email) {
+                await sendPaymentConfirmation(session.customer_details.email, {
+                    customerName: session.customer_details.name || undefined,
+                    planName: 'Agency Plan',
+                    amount: '49,00€/mo'
+                })
+            }
+        }
+    } else if (event.type === 'customer.subscription.deleted') {
+        const subscription = event.data.object as Stripe.Subscription
+        const userId = subscription.metadata?.userId
+
+        if (userId) {
+            // Revoke agency access
+            await supabase
+                .from('profiles')
+                .update({ plan: 'free', credits: 3 }) // Reset to default free credits or whatever your policy is
                 .eq('id', userId)
         }
     }

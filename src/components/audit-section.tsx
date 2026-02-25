@@ -101,9 +101,10 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                 className="w-full bg-white text-black hover:bg-zinc-200 font-black text-lg h-14 rounded-2xl transition-all flex items-center justify-center gap-2"
                                 onClick={handleCheckout}
                                 disabled={isCheckoutLoading}
+                                aria-label="Purchase Instant Full Access for 9.99"
                             >
                                 {isCheckoutLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 fill-current" />}
-                                {isCheckoutLoading ? "Loading..." : "Instant Full Access $9.99"}
+                                {isCheckoutLoading ? "Loading..." : "Instant Full Access 9,99€"}
                             </Button>
                             <p className="text-xs text-zinc-500 font-medium">
                                 No email? Get the full dashboard access immediately.

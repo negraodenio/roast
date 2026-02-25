@@ -30,6 +30,12 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 })
         }
 
+        // 1.1 Self-Roast Guard & Sanity Check
+        const host = validUrl.hostname.toLowerCase()
+        if (host === 'localhost' || host === '127.0.0.1' || host === 'roasty.ai' || host.includes('vercel.app')) {
+            return NextResponse.json({ error: "I won't roast myself or your local machine. Nice try!" }, { status: 400 })
+        }
+
         // 2. Check cache for recent analysis (within 24h)
         console.time('🔍 Cache Check')
         const supabase = await createClient()
@@ -71,8 +77,8 @@ export async function POST(req: NextRequest) {
                 return NextResponse.json({ error: 'No credits left. Please upgrade.' }, { status: 403 })
             }
         } else {
-            // Rate limit usage for non-logged in users check IP via Vercel headers later?
-            // For MVP, just allow it.
+            // "Cost Guard": Delay anonymous users to discourage low-quality bot spam
+            await new Promise(resolve => setTimeout(resolve, 3000))
         }
 
         // 3. Scrape Website
@@ -87,6 +93,7 @@ export async function POST(req: NextRequest) {
         }
 
         const siteContext = `
+<site_context>
       URL: ${validUrl.toString()}
       Title: ${siteData.title}
       Meta Description: ${siteData.metaDescription}
@@ -96,7 +103,11 @@ export async function POST(req: NextRequest) {
       Main CTAs detected: ${siteData.ctaTexts.join(', ')}
       Legal Links Found: Privacy=${siteData.legalLinks.privacy}, Terms=${siteData.legalLinks.terms}, Cookies=${siteData.legalLinks.cookies}
       Accessibility Stats: ${siteData.accessibility.imagesWithAlt}/${siteData.accessibility.totalImages} images have alt text. ${siteData.accessibility.ariaElements} ARIA elements found.
-      Body Preview: ${siteData.bodyText.substring(0, 2000)}...
+      Body Preview: 
+      --- START BODY ---
+      ${siteData.bodyText.replace(/<|>/g, '')} 
+      --- END BODY ---
+</site_context>
     `
 
         // 4. Parallel LLM Calls
@@ -120,13 +131,13 @@ export async function POST(req: NextRequest) {
              - Add double line breaks between sections for maximum readability.
              
              Return JSON only: { "score": number (0-100), "headline": string, "roast": string (markdown), "tldr": string }`,
-            `Roast this site:\n${siteContext}`
+            `Audit UX for the content inside <site_context> in the following snapshot:\n${siteContext}`
         )
 
         // UX Audit Task
         const uxPromise = callSiliconFlow(
             DEFAULT_MODELS.ux,
-            `You are a UX expert. Analyze the site context. Always respond in English.
+            `You are a UX expert. Analyze the site context inside <site_context>. Always respond in English.
              Return JSON only: { 
                 "score": number (0-100), 
                 "summary": "Short summary of UX state",
@@ -137,13 +148,12 @@ export async function POST(req: NextRequest) {
                     "fix": "Actionable step-by-step fix" 
                 }] 
              }`,
-            `Audit UX for:\n${siteContext}`
+            `Audit UX for the content inside <site_context> in the following snapshot:\n${siteContext}`
         )
-
         // SEO Audit Task
         const seoPromise = callSiliconFlow(
             DEFAULT_MODELS.seo,
-            `You are an SEO expert. Analyze the site context. Always respond in English.
+            `You are an SEO expert. Analyze the site context inside <site_context>. Always respond in English.
              Return JSON only: { 
                 "score": number (0-100), 
                 "summary": "Short summary of SEO state",
@@ -154,7 +164,7 @@ export async function POST(req: NextRequest) {
                     "fix": "Specific technical fix" 
                 }] 
              }`,
-            `Audit SEO for:\n${siteContext}`
+            `Audit SEO for the content inside <site_context> in the following snapshot:\n${siteContext}`
         )
 
         // Copywriting Audit Task
@@ -171,7 +181,7 @@ export async function POST(req: NextRequest) {
                     "fix": "Rewrite suggestion or structural change" 
                 }] 
              }`,
-            `Audit Copy for:\n${siteContext}`
+            `Audit Copy for the content inside <site_context> in the following snapshot:\n${siteContext}`
         )
 
         // Conversion (CRO) Audit Task
@@ -188,7 +198,7 @@ export async function POST(req: NextRequest) {
                     "fix": "Actionable tactic to increase conversions" 
                 }] 
              }`,
-            `Audit CRO for:\n${siteContext}`
+            `Audit CRO for the content inside <site_context> in the following snapshot:\n${siteContext}`
         )
 
         // Compliance, Accessibility & Security Task (saved to performance_audit column)
@@ -209,7 +219,7 @@ export async function POST(req: NextRequest) {
                     "fix": "How to resolve" 
                 }] 
              }`,
-            `Audit Security & Compliance for:\n${siteContext}`
+            `Audit Security & Compliance for the content inside <site_context> in the following snapshot:\n${siteContext}`
         )
 
         // Wait for all LLM calls
@@ -226,12 +236,15 @@ export async function POST(req: NextRequest) {
 
         const parseJSON = (str: string, fallbackScore = 50) => {
             try {
-                const data = JSON.parse(str)
+                // Remove potential markdown wrappers often returned by models
+                const cleaned = str.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim()
+                const data = JSON.parse(cleaned)
                 if (typeof data.score !== 'number') data.score = fallbackScore
                 if (!data.issues) data.issues = []
                 return data
             } catch {
-                return { score: fallbackScore, summary: "Analysis partial due to AI timeout.", issues: [] }
+                console.warn('❌ JSON Parse Failed for AI output:', str.substring(0, 100))
+                return { score: fallbackScore, summary: "Analysis partial due to AI formatting error.", issues: [] }
             }
         }
 

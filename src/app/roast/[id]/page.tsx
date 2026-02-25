@@ -7,10 +7,46 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { marked } from 'marked'
+import { Metadata } from 'next'
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+    const supabase = createClient()
+    const { data: roast } = await supabase
+        .from('roasts')
+        .select('website_url, headline, summary')
+        .eq('id', params.id)
+        .single()
+
+    const title = roast ? `Roast: ${roast.website_url}` : 'Roast Report'
+    const description = roast?.headline || 'Behold the brutal truth about this website.'
+
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            images: [
+                {
+                    url: `/api/og?id=${params.id}`,
+                    width: 1200,
+                    height: 630,
+                    alt: title,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [`/api/og?id=${params.id}`],
+        },
+    }
+}
 
 export const maxDuration = 60
 
-export default async function RoastResultPage({ params }: { params: { id: string } }) {
+export default async function RoastPage({ params }: { params: { id: string } }) {
     const supabase = createClient()
 
     const { data: roast } = await supabase
