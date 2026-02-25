@@ -30,9 +30,9 @@ export default async function Home() {
                         <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-red-500/30 bg-red-500/10 text-red-400 font-medium text-sm animate-pulse">
                             🔥 AI-Powered Brutality
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-br from-white via-zinc-200 to-zinc-500">
+                        <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight bg-clip-text text-white">
                             Your Website Sucks.<br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">Let AI Tell You Why.</span>
+                            <span className="text-red-500">Let AI Tell You Why.</span>
                         </h1>
                         <p className="text-xl text-zinc-400 mb-10 max-w-2xl mx-auto">
                             Get a brutally honest AI roast + actionable fixes for UX, SEO, and copy.
@@ -71,49 +71,49 @@ export default async function Home() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-red-500/50 transition-colors group">
-                                <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
+                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-zinc-500 transition-colors group">
+                                <div className="w-12 h-12 bg-zinc-800 rounded-lg flex items-center justify-center mb-6 group-hover:bg-zinc-700 transition-colors">
                                     <span className="text-2xl">🎨</span>
                                 </div>
                                 <h3 className="text-xl font-bold mb-3 text-white">UX & Design</h3>
                                 <p className="text-zinc-400">We analyze layout, navigation, and visual hierarchy to spot why users get confused.</p>
                             </div>
 
-                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-orange-500/50 transition-colors group">
-                                <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-orange-500/20 transition-colors">
+                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-zinc-500 transition-colors group">
+                                <div className="w-12 h-12 bg-zinc-800 rounded-lg flex items-center justify-center mb-6 group-hover:bg-zinc-700 transition-colors">
                                     <span className="text-2xl">✍️</span>
                                 </div>
                                 <h3 className="text-xl font-bold mb-3 text-white">Copywriting</h3>
                                 <p className="text-zinc-400">Your headlines are boring. We tell you exactly how to rewrite them to sell more.</p>
                             </div>
 
-                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-yellow-500/50 transition-colors group">
-                                <div className="w-12 h-12 bg-yellow-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-yellow-500/20 transition-colors">
+                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-zinc-500 transition-colors group">
+                                <div className="w-12 h-12 bg-zinc-800 rounded-lg flex items-center justify-center mb-6 group-hover:bg-zinc-700 transition-colors">
                                     <span className="text-2xl">💰</span>
                                 </div>
                                 <h3 className="text-xl font-bold mb-3 text-white">Conversion (CRO)</h3>
                                 <p className="text-zinc-400">Identify friction points in your funnel and CTAs that are killing your sales.</p>
                             </div>
 
-                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-green-500/50 transition-colors group">
-                                <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-green-500/20 transition-colors">
+                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-zinc-500 transition-colors group">
+                                <div className="w-12 h-12 bg-zinc-800 rounded-lg flex items-center justify-center mb-6 group-hover:bg-zinc-700 transition-colors">
                                     <span className="text-2xl">🔍</span>
                                 </div>
                                 <h3 className="text-xl font-bold mb-3 text-white">SEO Health</h3>
                                 <p className="text-zinc-400">Technical checks for meta tags, headings, and structure to help you rank.</p>
                             </div>
 
-                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-blue-500/50 transition-colors group relative overflow-hidden">
-                                <div className="absolute top-0 right-0 bg-blue-600 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">New</div>
-                                <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-blue-500/20 transition-colors">
+                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-zinc-500 transition-colors group relative overflow-hidden">
+                                <div className="absolute top-0 right-0 bg-red-600 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">New</div>
+                                <div className="w-12 h-12 bg-zinc-800 rounded-lg flex items-center justify-center mb-6 group-hover:bg-zinc-700 transition-colors">
                                     <span className="text-2xl">⚖️</span>
                                 </div>
                                 <h3 className="text-xl font-bold mb-3 text-white">Legal & Compliance</h3>
                                 <p className="text-zinc-400">Don't get sued. We check for Privacy Policies, Terms, and Accessibility basics.</p>
                             </div>
 
-                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-purple-500/50 transition-colors group">
-                                <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-purple-500/20 transition-colors">
+                            <div className="p-8 rounded-2xl bg-black border border-zinc-800 hover:border-zinc-500 transition-colors group">
+                                <div className="w-12 h-12 bg-zinc-800 rounded-lg flex items-center justify-center mb-6 group-hover:bg-zinc-700 transition-colors">
                                     <span className="text-2xl">🛠️</span>
                                 </div>
                                 <h3 className="text-xl font-bold mb-3 text-white">Actionable Fixes</h3>

@@ -64,7 +64,7 @@ export function UrlInput() {
                 <Button
                     type="submit"
                     size="lg"
-                    className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold h-12 px-8 shadow-[0_0_20px_rgba(255,68,68,0.3)] transition-all hover:scale-105"
+                    className="bg-red-600 hover:bg-red-700 text-white font-bold h-12 px-8 shadow-[0_0_20px_rgba(255,68,68,0.2)] transition-all hover:scale-105"
                     disabled={loading}
                 >
                     {loading ? <Loader2 className="animate-spin mr-2" /> : <Flame className="mr-2 fill-white" />}

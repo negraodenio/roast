@@ -1,3 +1,4 @@
+import React from 'react'
 import { NextRequest, NextResponse } from 'next/server'
 import { renderToBuffer } from '@react-pdf/renderer'
 import { RoastPdf } from '@/components/pdf/RoastPdf'
@@ -45,9 +46,8 @@ export async function POST(request: NextRequest) {
         }
 
         // Gerar o PDF com dados estruturados
-        // @ts-ignore - RoastPdf returns JSX that renderToBuffer can handle
         const pdfStream = await renderToBuffer(
-            RoastPdf({
+            React.createElement(RoastPdf, {
                 url,
                 score,
                 roastText,
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
                 isPremium,
                 subScores,
                 audits,
-            })
+            }) as any
         )
 
         // Enviar email com PDF anexado

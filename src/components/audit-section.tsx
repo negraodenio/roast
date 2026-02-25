@@ -25,7 +25,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
     if (isLocked) {
         return (
             <div className="relative mt-8 w-full max-w-4xl mx-auto group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-purple-600/30 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-zinc-800/50 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
 
                 <div className="relative z-10 flex flex-col items-center justify-center bg-zinc-950/80 backdrop-blur-xl rounded-2xl border border-zinc-800 p-8 md:p-12 text-center shadow-2xl">
                     <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mb-6 border border-primary/20 rotate-3">
@@ -95,24 +95,24 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
     return (
         <div className="w-full max-w-4xl mx-auto mt-12">
             <Tabs defaultValue="compliance" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 bg-zinc-900/50 h-auto p-1 text-zinc-400 gap-1 rounded-xl">
-                    <TabsTrigger value="compliance" className="data-[state=active]:bg-red-500 data-[state=active]:text-white py-2.5 font-bold rounded-lg transition-all">
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 bg-zinc-900/50 h-auto p-1 text-zinc-400 gap-1 rounded-xl border border-zinc-800/50">
+                    <TabsTrigger value="compliance" className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white py-2.5 font-bold rounded-lg transition-all">
                         <ShieldAlert className="w-4 h-4 mr-2" />
                         Security
                     </TabsTrigger>
-                    <TabsTrigger value="ux" className="data-[state=active]:bg-purple-500 data-[state=active]:text-white py-2.5 font-bold rounded-lg transition-all">
+                    <TabsTrigger value="ux" className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white py-2.5 font-bold rounded-lg transition-all">
                         <Eye className="w-4 h-4 mr-2" />
                         UX Audit
                     </TabsTrigger>
-                    <TabsTrigger value="cro" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white py-2.5 font-bold rounded-lg transition-all">
+                    <TabsTrigger value="cro" className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white py-2.5 font-bold rounded-lg transition-all">
                         <Target className="w-4 h-4 mr-2" />
                         Conversion
                     </TabsTrigger>
-                    <TabsTrigger value="seo" className="data-[state=active]:bg-amber-500 data-[state=active]:text-white py-2.5 font-bold rounded-lg transition-all">
+                    <TabsTrigger value="seo" className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white py-2.5 font-bold rounded-lg transition-all">
                         <Search className="w-4 h-4 mr-2" />
                         SEO
                     </TabsTrigger>
-                    <TabsTrigger value="copy" className="data-[state=active]:bg-amber-600 data-[state=active]:text-white py-2.5 font-bold rounded-lg transition-all">
+                    <TabsTrigger value="copy" className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white py-2.5 font-bold rounded-lg transition-all">
                         <Zap className="w-4 h-4 mr-2" />
                         Copywriting
                     </TabsTrigger>
@@ -256,17 +256,17 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         animate={{ opacity: 1, x: 0 }}
                         className="mt-6 space-y-6"
                     >
-                        <div className="flex items-center gap-4 p-6 rounded-2xl bg-purple-500/5 border border-purple-500/20 mb-8 overflow-hidden relative">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 -rotate-12">
-                                <Eye className="w-24 h-24 text-purple-500" />
+                        <div className="flex items-center gap-4 p-6 rounded-2xl bg-zinc-800/20 border border-zinc-700/50 mb-8 overflow-hidden relative">
+                            <div className="absolute top-0 right-0 p-4 opacity-5 -rotate-12">
+                                <Eye className="w-24 h-24 text-zinc-400" />
                             </div>
-                            <div className="relative z-10 w-16 h-16 rounded-2xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
-                                <Eye className="w-10 h-10 text-purple-500" />
+                            <div className="relative z-10 w-16 h-16 rounded-2xl bg-zinc-800/50 flex items-center justify-center border border-zinc-700/50">
+                                <Eye className="w-10 h-10 text-zinc-300" />
                             </div>
                             <div className="relative z-10 flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                     <h3 className="text-xl font-black text-white uppercase tracking-tighter">The UI Critic</h3>
-                                    <Badge variant="outline" className="text-purple-400 border-purple-500/50">Brutally Honest</Badge>
+                                    <Badge variant="outline" className="text-zinc-400 border-zinc-700/50">Brutally Honest</Badge>
                                 </div>
                                 <p className="text-sm text-zinc-400 leading-tight italic">"Your design choices are actually hurting my eyes. Let's fix the friction before your users go blind."</p>
                             </div>
@@ -275,16 +275,16 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         <div className="grid gap-6">
                             <div className="flex items-center justify-between px-4">
                                 <div className="flex items-center gap-2">
-                                    <TrendingUp className="w-5 h-5 text-purple-500" />
+                                    <TrendingUp className="w-5 h-5 text-zinc-400" />
                                     <span className="text-sm font-bold text-zinc-400 uppercase tracking-widest">UX Audit Elements</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">UX Score</span>
-                                    <span className="text-3xl font-black text-purple-500">{roast.ux_audit?.score ?? 0}/100</span>
+                                    <span className="text-3xl font-black text-white">{roast.ux_audit?.score ?? 0}/100</span>
                                 </div>
                             </div>
 
-                            <Card className="bg-zinc-900/40 backdrop-blur-md border-zinc-800/50 shadow-2xl relative overflow-visible group hover:border-purple-500/30 transition-all duration-500">
+                            <Card className="bg-zinc-900/40 backdrop-blur-md border-zinc-800/50 shadow-2xl relative overflow-visible group hover:border-zinc-700/50 transition-all duration-500">
                                 <CardContent className="p-6 space-y-4">
                                     <TooltipProvider>
                                         {roast.ux_audit?.issues?.map((issue: any, i: number) => (
@@ -294,11 +294,11 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                         <TooltipTrigger asChild>
                                                             <div className="cursor-help mt-1 shrink-0">
                                                                 {issue.severity === 'critical' ?
-                                                                    <div className="p-2 rounded-lg bg-orange-500/10 border border-orange-500/20">
-                                                                        <AlertCircle className="text-orange-500 w-5 h-5" />
+                                                                    <div className="p-2 rounded-lg bg-red-500/10 border border-red-500/20">
+                                                                        <AlertCircle className="text-red-500 w-5 h-5" />
                                                                     </div> :
-                                                                    <div className="p-2 rounded-lg bg-purple-500/5 border border-purple-500/10">
-                                                                        <Info className="text-purple-400/60 w-5 h-5" />
+                                                                    <div className="p-2 rounded-lg bg-zinc-800/50 border border-zinc-700/50">
+                                                                        <Info className="text-zinc-400 w-5 h-5" />
                                                                     </div>
                                                                 }
                                                             </div>
@@ -310,7 +310,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                     <div className="flex-1">
                                                         <h4 className="text-lg font-bold text-white mb-2">{issue.title}</h4>
                                                         <p className="text-sm text-zinc-400 mb-4 leading-relaxed font-medium">
-                                                            <span className="text-purple-400/80 uppercase font-black text-[10px] tracking-widest block mb-1">Psychological Impact</span>
+                                                            <span className="text-zinc-500 uppercase font-black text-[10px] tracking-widest block mb-1">Psychological Impact</span>
                                                             {issue.description}
                                                         </p>
                                                         <div className="flex items-start gap-4 p-4 rounded-xl bg-green-500/5 border border-green-500/10 text-green-400/90 text-[13px] leading-relaxed font-semibold">
@@ -337,17 +337,17 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         animate={{ opacity: 1, scale: 1 }}
                         className="mt-6 space-y-6"
                     >
-                        <div className="flex items-center gap-4 p-6 rounded-2xl bg-purple-600/5 border border-purple-600/20 mb-8 overflow-hidden relative">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 rotate-45">
-                                <Target className="w-24 h-24 text-purple-600" />
+                        <div className="flex items-center gap-4 p-6 rounded-2xl bg-zinc-800/20 border border-zinc-700/50 mb-8 overflow-hidden relative">
+                            <div className="absolute top-0 right-0 p-4 opacity-5 rotate-45">
+                                <Target className="w-24 h-24 text-zinc-400" />
                             </div>
-                            <div className="relative z-10 w-16 h-16 rounded-2xl bg-purple-600/10 flex items-center justify-center border border-purple-600/20">
-                                <Target className="w-10 h-10 text-purple-600" />
+                            <div className="relative z-10 w-16 h-16 rounded-2xl bg-zinc-800/50 flex items-center justify-center border border-zinc-700/50">
+                                <Target className="w-10 h-10 text-zinc-300" />
                             </div>
                             <div className="relative z-10 flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                     <h3 className="text-xl font-black text-white uppercase tracking-tighter">The CRO Hitman</h3>
-                                    <Badge className="bg-purple-600 text-white border-none shadow-lg shadow-purple-900/40 text-[10px] uppercase font-black">Sales Killer</Badge>
+                                    <Badge className="bg-zinc-800 text-white border-none shadow-lg shadow-zinc-900/40 text-[10px] uppercase font-black">Sales Killer</Badge>
                                 </div>
                                 <p className="text-sm text-zinc-400 leading-tight italic">"You're literally begging people to leave without buying. Let's plug these leaks before you go bankrupt."</p>
                             </div>
@@ -356,16 +356,16 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         <div className="grid gap-6">
                             <div className="flex items-center justify-between px-4">
                                 <div className="flex items-center gap-2">
-                                    <TrendingUp className="w-5 h-5 text-purple-600" />
+                                    <TrendingUp className="w-5 h-5 text-zinc-400" />
                                     <span className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Conversion Holes</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">CRO Score</span>
-                                    <span className="text-3xl font-black text-purple-600">{roast.conversion_tips?.score ?? 0}/100</span>
+                                    <span className="text-3xl font-black text-white">{roast.conversion_tips?.score ?? 0}/100</span>
                                 </div>
                             </div>
 
-                            <Card className="bg-zinc-900/40 backdrop-blur-md border-zinc-800/50 shadow-2xl relative overflow-visible group hover:border-purple-600/30 transition-all duration-500">
+                            <Card className="bg-zinc-900/40 backdrop-blur-md border-zinc-800/50 shadow-2xl relative overflow-visible group hover:border-zinc-700/50 transition-all duration-500">
                                 <CardHeader className="border-b border-zinc-900 pb-4">
                                     <CardDescription className="text-zinc-400 font-medium italic">"{roast.conversion_tips?.summary || "Analyzing conversion triggers..."}"</CardDescription>
                                 </CardHeader>
@@ -381,8 +381,8 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                                     <div className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 shadow-lg shadow-red-900/20">
                                                                         <AlertCircle className="text-red-500 w-5 h-5" />
                                                                     </div> :
-                                                                    <div className="p-2 rounded-lg bg-orange-500/5 border border-orange-500/10">
-                                                                        <Info className="text-orange-400/60 w-5 h-5" />
+                                                                    <div className="p-2 rounded-lg bg-zinc-800/50 border border-zinc-700/50">
+                                                                        <Info className="text-zinc-400 w-5 h-5" />
                                                                     </div>
                                                                 }
                                                             </div>
@@ -394,7 +394,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                     <div className="flex-1">
                                                         <h4 className="text-lg font-bold text-white mb-2">{issue.title}</h4>
                                                         <p className="text-sm text-zinc-400 mb-4 leading-relaxed font-medium">
-                                                            <span className="text-purple-500/80 uppercase font-black text-[10px] tracking-widest block mb-1">Profit Destruction</span>
+                                                            <span className="text-zinc-500 uppercase font-black text-[10px] tracking-widest block mb-1">Profit Destruction</span>
                                                             {issue.description}
                                                         </p>
                                                         <div className="flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-green-500/10 to-emerald-500/5 border border-green-500/20 text-green-400/90 text-sm leading-relaxed font-bold shadow-inner">
@@ -421,17 +421,17 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         animate={{ opacity: 1, y: 0 }}
                         className="mt-6 space-y-6"
                     >
-                        <div className="flex items-center gap-4 p-6 rounded-2xl bg-amber-500/5 border border-amber-500/20 mb-8 overflow-hidden relative">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
-                                <Search className="w-24 h-24 text-amber-500" />
+                        <div className="flex items-center gap-4 p-6 rounded-2xl bg-zinc-800/20 border border-zinc-700/50 mb-8 overflow-hidden relative">
+                            <div className="absolute top-0 right-0 p-4 opacity-5 rotate-12">
+                                <Search className="w-24 h-24 text-zinc-400" />
                             </div>
-                            <div className="relative z-10 w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
-                                <Search className="w-10 h-10 text-amber-500" />
+                            <div className="relative z-10 w-16 h-16 rounded-2xl bg-zinc-800/50 flex items-center justify-center border border-zinc-700/50">
+                                <Search className="w-10 h-10 text-zinc-300" />
                             </div>
                             <div className="relative z-10 flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                     <h3 className="text-xl font-black text-white uppercase tracking-tighter">The Search Spy</h3>
-                                    <Badge className="bg-amber-500 text-black border-none font-black text-[10px] uppercase">Invisible Mode</Badge>
+                                    <Badge className="bg-zinc-800 text-zinc-300 border-none font-black text-[10px] uppercase">Invisible Mode</Badge>
                                 </div>
                                 <p className="text-sm text-zinc-400 leading-tight italic">"Your competitors are eating your lunch while you're ghosting Google. Let's hijack their traffic."</p>
                             </div>
@@ -440,16 +440,16 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         <div className="grid gap-6">
                             <div className="flex items-center justify-between px-4">
                                 <div className="flex items-center gap-2">
-                                    <TrendingUp className="w-5 h-5 text-amber-500" />
+                                    <TrendingUp className="w-5 h-5 text-zinc-400" />
                                     <span className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Visibility Leaks</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">SEO Authority</span>
-                                    <span className="text-3xl font-black text-amber-500">{roast.seo_audit?.score ?? 0}/100</span>
+                                    <span className="text-3xl font-black text-white">{roast.seo_audit?.score ?? 0}/100</span>
                                 </div>
                             </div>
 
-                            <Card className="bg-zinc-900/40 backdrop-blur-md border-zinc-800/50 shadow-2xl relative overflow-visible group hover:border-amber-500/30 transition-all duration-500">
+                            <Card className="bg-zinc-900/40 backdrop-blur-md border-zinc-800/50 shadow-2xl relative overflow-visible group hover:border-zinc-700/50 transition-all duration-500">
                                 <CardContent className="p-6 space-y-4">
                                     <TooltipProvider>
                                         {roast.seo_audit?.issues?.map((issue: any, i: number) => (
@@ -458,8 +458,8 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                     <Tooltip>
                                                         <TooltipTrigger asChild>
                                                             <div className="cursor-help mt-1 shrink-0">
-                                                                <div className="p-2 rounded-lg bg-amber-500/5 border border-amber-500/10">
-                                                                    <Search className="text-amber-400/60 w-5 h-5" />
+                                                                <div className="p-2 rounded-lg bg-zinc-800/50 border border-zinc-700/50">
+                                                                    <Search className="text-zinc-400 w-5 h-5" />
                                                                 </div>
                                                             </div>
                                                         </TooltipTrigger>
@@ -470,13 +470,13 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                     <div className="flex-1">
                                                         <h4 className="text-lg font-bold text-white mb-2">{issue.title}</h4>
                                                         <p className="text-sm text-zinc-400 mb-4 leading-relaxed font-medium">
-                                                            <span className="text-amber-400/80 uppercase font-black text-[10px] tracking-widest block mb-1">Competitor Advantage</span>
+                                                            <span className="text-zinc-500 uppercase font-black text-[10px] tracking-widest block mb-1">Competitor Advantage</span>
                                                             {issue.description}
                                                         </p>
-                                                        <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-500/5 border border-amber-500/10 text-amber-400/90 text-[13px] leading-relaxed font-semibold">
-                                                            <Target className="w-4 h-4 shrink-0 mt-0.5 text-amber-500/60" />
+                                                        <div className="flex items-start gap-3 p-3.5 rounded-xl bg-green-500/5 border border-green-500/10 text-green-400/90 text-[13px] leading-relaxed font-semibold">
+                                                            <Target className="w-4 h-4 shrink-0 mt-0.5 text-green-500/60" />
                                                             <div>
-                                                                <strong className="block text-amber-500 uppercase text-[10px] tracking-widest mb-1.5 font-black">Spy's Tactic</strong>
+                                                                <strong className="block text-green-500 uppercase text-[10px] tracking-widest mb-1.5 font-black">Spy's Tactic</strong>
                                                                 {issue.fix}
                                                             </div>
                                                         </div>
@@ -497,17 +497,17 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         animate={{ opacity: 1, scale: 1 }}
                         className="mt-6 space-y-6"
                     >
-                        <div className="flex items-center gap-4 p-6 rounded-2xl bg-amber-600/5 border border-amber-600/20 mb-8 overflow-hidden relative">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
-                                <Zap className="w-24 h-24 text-amber-600" />
+                        <div className="flex items-center gap-4 p-6 rounded-2xl bg-zinc-800/20 border border-zinc-700/50 mb-8 overflow-hidden relative">
+                            <div className="absolute top-0 right-0 p-4 opacity-5 rotate-12">
+                                <Zap className="w-24 h-24 text-zinc-400" />
                             </div>
-                            <div className="relative z-10 w-16 h-16 rounded-2xl bg-amber-600/10 flex items-center justify-center border border-amber-600/20">
-                                <Zap className="w-10 h-10 text-amber-600" />
+                            <div className="relative z-10 w-16 h-16 rounded-2xl bg-zinc-800/50 flex items-center justify-center border border-zinc-700/50">
+                                <Zap className="w-10 h-10 text-zinc-300" />
                             </div>
                             <div className="relative z-10 flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                     <h3 className="text-xl font-black text-white uppercase tracking-tighter">The Copy Assassin</h3>
-                                    <Badge className="bg-amber-600 text-white border-none font-black text-[10px] uppercase">Lethal Hooks</Badge>
+                                    <Badge className="bg-zinc-800 text-zinc-300 border-none font-black text-[10px] uppercase">Lethal Hooks</Badge>
                                 </div>
                                 <p className="text-sm text-zinc-400 leading-tight italic">"Your words are boring your customers to sleep. Let's inject some adrenaline into your messaging."</p>
                             </div>
@@ -516,16 +516,16 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         <div className="grid gap-6">
                             <div className="flex items-center justify-between px-4">
                                 <div className="flex items-center gap-2">
-                                    <Target className="w-5 h-5 text-amber-600" />
+                                    <Target className="w-5 h-5 text-zinc-400" />
                                     <span className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Messaging Gaps</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Persuasion Score</span>
-                                    <span className="text-3xl font-black text-amber-600">{roast.copy_audit?.score ?? 0}/100</span>
+                                    <span className="text-3xl font-black text-white">{roast.copy_audit?.score ?? 0}/100</span>
                                 </div>
                             </div>
 
-                            <Card className="bg-zinc-900/40 backdrop-blur-md border-zinc-800/50 shadow-2xl relative overflow-visible group hover:border-amber-600/30 transition-all duration-500">
+                            <Card className="bg-zinc-900/40 backdrop-blur-md border-zinc-800/50 shadow-2xl relative overflow-visible group hover:border-zinc-700/50 transition-all duration-500">
                                 <CardContent className="p-6 space-y-4">
                                     <TooltipProvider>
                                         {roast.copy_audit?.issues?.map((issue: any, i: number) => (
@@ -534,8 +534,8 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                     <Tooltip>
                                                         <TooltipTrigger asChild>
                                                             <div className="cursor-help mt-1 shrink-0">
-                                                                <div className="p-2 rounded-lg bg-amber-600/5 border border-amber-600/10">
-                                                                    <Zap className="text-amber-400/60 w-5 h-5" />
+                                                                <div className="p-2 rounded-lg bg-zinc-800/50 border border-zinc-700/50">
+                                                                    <Zap className="text-zinc-400 w-5 h-5" />
                                                                 </div>
                                                             </div>
                                                         </TooltipTrigger>
@@ -546,13 +546,13 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                     <div className="flex-1">
                                                         <h4 className="text-lg font-bold text-white mb-2">{issue.title}</h4>
                                                         <p className="text-sm text-zinc-400 mb-4 leading-relaxed font-medium">
-                                                            <span className="text-amber-500/80 uppercase font-black text-[10px] tracking-widest block mb-1">Persuasion Leak</span>
+                                                            <span className="text-zinc-500 uppercase font-black text-[10px] tracking-widest block mb-1">Persuasion Leak</span>
                                                             {issue.description}
                                                         </p>
-                                                        <div className="flex items-start gap-4 p-4 rounded-xl bg-amber-600/5 border border-amber-600/10 text-amber-400/90 text-[13px] leading-relaxed font-semibold">
-                                                            <Zap className="w-5 h-5 shrink-0 mt-0.5 text-amber-500/60" />
+                                                        <div className="flex items-start gap-4 p-4 rounded-xl bg-green-500/5 border border-green-500/10 text-green-400/90 text-[13px] leading-relaxed font-semibold">
+                                                            <Zap className="w-5 h-5 shrink-0 mt-0.5 text-green-500/60" />
                                                             <div>
-                                                                <strong className="block text-amber-500 uppercase text-[10px] tracking-widest mb-1.5 font-black">Copy injection</strong>
+                                                                <strong className="block text-green-500 uppercase text-[10px] tracking-widest mb-1.5 font-black">Copy injection</strong>
                                                                 {issue.fix}
                                                             </div>
                                                         </div>
