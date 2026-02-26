@@ -42,6 +42,15 @@ export async function POST(req: NextRequest) {
         const userId = session.metadata?.userId
         const roastId = session.metadata?.roastId
         const plan = session.metadata?.plan
+        const customerId = session.customer as string
+
+        if (userId && customerId) {
+            // Save stripe_customer_id to profile for Customer Portal access
+            await supabase
+                .from('profiles')
+                .update({ stripe_customer_id: customerId })
+                .eq('id', userId)
+        }
 
         if (plan === 'single' && roastId) {
             // Unlock single roast
@@ -64,7 +73,7 @@ export async function POST(req: NextRequest) {
                         customerName: session.customer_details.name || undefined,
                         planName: 'Single Roast Report',
                         amount: '9,99€',
-                        roastUrl: session.metadata.roastUrl // Assuming we add this or use website_url
+                        roastUrl: session.metadata?.roastUrl // Assuming we add this or use website_url
                     })
                 }
             }
@@ -87,12 +96,16 @@ export async function POST(req: NextRequest) {
     } else if (event.type === 'customer.subscription.deleted') {
         const subscription = event.data.object as Stripe.Subscription
         const userId = subscription.metadata?.userId
-
         if (userId) {
-            // Revoke agency access
+            const customerId = subscription.customer as string
+            // Revoke agency access but keep the customer ID
             await supabase
                 .from('profiles')
-                .update({ plan: 'free', credits: 3 }) // Reset to default free credits or whatever your policy is
+                .update({
+                    plan: 'free',
+                    credits: 3,
+                    stripe_customer_id: customerId // Ensure it's stored if they just canceled
+                })
                 .eq('id', userId)
         }
     }

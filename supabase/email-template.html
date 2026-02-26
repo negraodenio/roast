@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Roast - RoastThis</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .card {
+            background-color: #0a0a0a;
+            border: 1px solid #1f1f1f;
+            border-radius: 32px;
+            padding: 48px;
+            text-align: center;
+        }
+        .logo {
+            margin-bottom: 32px;
+        }
+        .flame {
+            color: #ef4444;
+            display: inline-block;
+            font-size: 32px;
+            margin-right: 8px;
+        }
+        h1 {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            letter-spacing: -0.05em;
+        }
+        p {
+            color: #a1a1aa;
+            font-size: 16px;
+            line-height: 24px;
+            margin-bottom: 32px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #ffffff;
+            color: #000000 !important;
+            font-weight: 900;
+            font-size: 16px;
+            padding: 16px 40px;
+            border-radius: 16px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: transform 0.2s ease;
+        }
+        .footer {
+            margin-top: 32px;
+            color: #52525b;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 700;
+        }
+        .brand {
+            color: #ffffff;
+            font-weight: 900;
+        }
+        .highlight {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="logo">
+                <span class="flame">🔥</span>
+                <span style="color: white; font-size: 24px; font-weight: 900; letter-spacing: -1px;">Roast<span style="color: #ef4444;">This</span></span>
+            </div>
+            <h1>Ready for your reality check?</h1>
+            <p>
+                You're one step away from exposing the flaws that are killing your conversions. 
+                Click the button below to confirm your account and start roasting.
+            </p>
+            <a href="{{ .ConfirmationURL }}" class="button">Confirm Account</a>
+            <div class="footer">
+                Built with 😡 by <span class="brand">Roast<span class="highlight">This</span></span>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 24px;">
+            <p style="font-size: 11px; color: #3f3f46;">
+                If you didn't request this, you can ignore it. Your site will stay ugly, no big deal.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

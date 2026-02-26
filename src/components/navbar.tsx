@@ -32,11 +32,14 @@ export function Navbar() {
     }
 
     return (
-        <nav className="border-b border-zinc-800 bg-zinc-950/50 backdrop-blur-md sticky top-0 z-50">
-            <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-2 font-black text-xl tracking-tighter hover:opacity-80 transition-opacity">
-                    <Flame className="w-6 h-6 text-red-500 fill-red-500" />
-                    <span>RoastThis</span>
+        <nav className="border-b border-white/5 bg-black/60 backdrop-blur-xl sticky top-0 z-50">
+            <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+                <Link href="/" className="flex items-center gap-2 font-black text-2xl tracking-tighter hover:opacity-80 transition-all group">
+                    <div className="relative">
+                        <Flame className="w-8 h-8 text-red-500 fill-red-500 group-hover:scale-110 transition-transform" />
+                        <div className="absolute inset-0 bg-red-500/20 blur-xl rounded-full -z-10 group-hover:bg-red-500/40 transition-all" />
+                    </div>
+                    <span>Roast<span className="text-red-500">This</span></span>
                 </Link>
 
                 <div className="flex items-center gap-4">
