@@ -15,9 +15,15 @@ const tabs = [
     { id: 'notifications', label: 'Notifications', icon: Bell },
 ]
 
+interface SettingsProfile {
+    id: string
+    username?: string
+    full_name?: string
+}
+
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState('general')
-    const [profile, setProfile] = useState<any>(null)
+    const [profile, setProfile] = useState<SettingsProfile | null>(null)
     const [loading, setLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
     const supabase = createClient()
@@ -37,9 +43,10 @@ export default function SettingsPage() {
             setLoading(false)
         }
         fetchProfile()
-    }, [])
+    }, [supabase])
 
     const handleSave = async () => {
+        if (!profile) return
         setIsSaving(true)
         try {
             const { error } = await supabase
@@ -56,10 +63,10 @@ export default function SettingsPage() {
                 title: 'Success',
                 description: 'Profile updated successfully.',
             })
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast({
                 title: 'Error',
-                description: error.message,
+                description: (error as Error).message,
                 variant: 'destructive'
             })
         } finally {
@@ -90,8 +97,8 @@ export default function SettingsPage() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-sm ${activeTab === tab.id
-                                    ? 'bg-zinc-900 text-white border border-zinc-800'
-                                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'
+                                ? 'bg-zinc-900 text-white border border-zinc-800'
+                                : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/50'
                                 }`}
                         >
                             <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-red-500' : ''}`} />
@@ -117,7 +124,7 @@ export default function SettingsPage() {
                                             <Input
                                                 id="username"
                                                 value={profile?.username || ''}
-                                                onChange={(e) => setProfile({ ...profile, username: e.target.value })}
+                                                onChange={(e) => profile && setProfile({ ...profile, username: e.target.value })}
                                                 className="bg-black/40 border-zinc-800 rounded-xl focus:border-red-500/50 h-12"
                                             />
                                         </div>
@@ -126,7 +133,7 @@ export default function SettingsPage() {
                                             <Input
                                                 id="fullName"
                                                 value={profile?.full_name || ''}
-                                                onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
+                                                onChange={(e) => profile && setProfile({ ...profile, full_name: e.target.value })}
                                                 className="bg-black/40 border-zinc-800 rounded-xl focus:border-red-500/50 h-12"
                                             />
                                         </div>

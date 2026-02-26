@@ -13,7 +13,7 @@ export default function AuthErrorPage() {
                     </div>
                     <CardTitle className="text-2xl font-bold text-center">Authentication Error</CardTitle>
                     <CardDescription className="text-center text-zinc-400">
-                        We couldn't verify your account. The link might have expired or is invalid.
+                        We couldn&apos;t verify your account. The link might have expired or is invalid.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="text-center text-zinc-500 text-sm">

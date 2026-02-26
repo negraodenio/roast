@@ -215,7 +215,7 @@ interface AuditData {
     issues?: AuditIssue[]
 }
 
-interface RoastPdfProps {
+export interface RoastPdfProps {
     url: string
     score: number
     roastText: string

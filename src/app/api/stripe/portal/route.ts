@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@/lib/supabase/server'
 
@@ -9,7 +9,7 @@ function getStripe() {
     })
 }
 
-export async function POST(req: NextRequest) {
+export async function POST() {
     try {
         const stripe = getStripe()
         const supabase = createClient()
@@ -39,8 +39,8 @@ export async function POST(req: NextRequest) {
         })
 
         return NextResponse.json({ url: session.url })
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Portal error:', error)
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        return NextResponse.json({ error: (error as Error).message }, { status: 500 })
     }
 }

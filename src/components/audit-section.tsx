@@ -1,7 +1,7 @@
 "use client"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card"
 import { AlertCircle, Info, Lock, Sparkles, Scale, Gavel, ShieldAlert, Eye, Search, ShieldCheck, Target, Zap, TrendingUp, AlertTriangle, ArrowLeft, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { LeadCaptureForm } from "./lead-capture-form"
@@ -40,7 +40,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
             if (data.url) {
                 window.location.href = data.url
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Checkout error:', error)
             toast({
                 title: 'Checkout Error',
@@ -173,7 +173,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                     <h3 className="text-xl font-black text-white uppercase tracking-tighter">The Compliance Guard</h3>
                                     <Badge variant="destructive" className="bg-red-500 text-white animate-pulse">Strict</Badge>
                                 </div>
-                                <p className="text-sm text-zinc-400 leading-tight italic">"Your legal exposure is not just an error, it's a liability. Fix this before the fines arrive."</p>
+                                <p className="text-sm text-zinc-400 leading-tight italic">&quot;Your legal exposure is not just an error, it&apos;s a liability. Fix this before the fines arrive.&quot;</p>
                             </div>
                         </div>
 
@@ -192,7 +192,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                             <Card className="bg-zinc-900/40 backdrop-blur-md border-zinc-800/50 shadow-2xl relative overflow-visible group hover:border-red-500/30 transition-all duration-500">
                                 <CardContent className="p-6 space-y-6">
                                     <TooltipProvider>
-                                        {roast.performance_audit?.issues?.map((issue: any, i: number) => (
+                                        {(roast as any).performance_audit?.issues?.map((issue: any, i: number) => (
                                             <div key={i} className="relative p-6 rounded-2xl bg-black/40 border border-zinc-800/50 group-hover:bg-black/60 transition-colors">
                                                 <div className="flex items-start gap-4">
                                                     <Tooltip>
@@ -260,7 +260,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                     </div>
 
                                                     <p className="text-sm text-zinc-400 font-medium leading-relaxed max-w-md">
-                                                        "Based on your compliance fallout score, you are raw-dogging the internet in a business suit. This is a fatal legal liability."
+                                                        &quot;Based on your compliance fallout score, you are raw-dogging the internet in a business suit. This is a fatal legal liability.&quot;
                                                     </p>
                                                 </div>
 
@@ -304,7 +304,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                     <h3 className="text-xl font-black text-white uppercase tracking-tighter">The UI Critic</h3>
                                     <Badge variant="outline" className="text-zinc-400 border-zinc-700/50">Brutally Honest</Badge>
                                 </div>
-                                <p className="text-sm text-zinc-400 leading-tight italic">"Your design choices are actually hurting my eyes. Let's fix the friction before your users go blind."</p>
+                                <p className="text-sm text-zinc-400 leading-tight italic">&quot;Your design choices are actually hurting my eyes. Let&apos;s fix the friction before your users go blind.&quot;</p>
                             </div>
                         </div>
 
@@ -385,7 +385,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                     <h3 className="text-xl font-black text-white uppercase tracking-tighter">The CRO Hitman</h3>
                                     <Badge className="bg-zinc-800 text-white border-none shadow-lg shadow-zinc-900/40 text-[10px] uppercase font-black">Sales Killer</Badge>
                                 </div>
-                                <p className="text-sm text-zinc-400 leading-tight italic">"You're literally begging people to leave without buying. Let's plug these leaks before you go bankrupt."</p>
+                                <p className="text-sm text-zinc-400 leading-tight italic">&quot;You&apos;re literally begging people to leave without buying. Let&apos;s plug these leaks before you go bankrupt.&quot;</p>
                             </div>
                         </div>
 
@@ -403,7 +403,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
 
                             <Card className="bg-zinc-900/40 backdrop-blur-md border-zinc-800/50 shadow-2xl relative overflow-visible group hover:border-zinc-700/50 transition-all duration-500">
                                 <CardHeader className="border-b border-zinc-900 pb-4">
-                                    <CardDescription className="text-zinc-400 font-medium italic">"{roast.conversion_tips?.summary || "Analyzing conversion triggers..."}"</CardDescription>
+                                    <CardDescription className="text-zinc-400 font-medium italic">&quot;{(roast as any).conversion_tips?.summary || "Analyzing conversion triggers..."}&quot;</CardDescription>
                                 </CardHeader>
                                 <CardContent className="p-6 space-y-4">
                                     <TooltipProvider>
@@ -469,7 +469,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                     <h3 className="text-xl font-black text-white uppercase tracking-tighter">The Search Spy</h3>
                                     <Badge className="bg-zinc-800 text-zinc-300 border-none font-black text-[10px] uppercase">Invisible Mode</Badge>
                                 </div>
-                                <p className="text-sm text-zinc-400 leading-tight italic">"Your competitors are eating your lunch while you're ghosting Google. Let's hijack their traffic."</p>
+                                <p className="text-sm text-zinc-400 leading-tight italic">&quot;Your competitors are eating your lunch while you&apos;re ghosting Google. Let&apos;s hijack their traffic.&quot;</p>
                             </div>
                         </div>
 
@@ -545,7 +545,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                     <h3 className="text-xl font-black text-white uppercase tracking-tighter">The Copy Assassin</h3>
                                     <Badge className="bg-zinc-800 text-zinc-300 border-none font-black text-[10px] uppercase">Lethal Hooks</Badge>
                                 </div>
-                                <p className="text-sm text-zinc-400 leading-tight italic">"Your words are boring your customers to sleep. Let's inject some adrenaline into your messaging."</p>
+                                <p className="text-sm text-zinc-400 leading-tight italic">&quot;Your words are boring your customers to sleep. Let&apos;s inject some adrenaline into your messaging.&quot;</p>
                             </div>
                         </div>
 

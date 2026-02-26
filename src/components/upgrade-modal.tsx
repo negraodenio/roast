@@ -13,7 +13,12 @@ import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Check, Zap, Loader2 } from "lucide-react"
 
-export function UpgradeModal() {
+interface UpgradeModalProps {
+    isOpen: boolean
+    onClose: () => void
+}
+
+export function UpgradeModal({ isOpen, onClose }: UpgradeModalProps) {
     const [isLoading, setIsLoading] = useState<string | null>(null)
     const { toast } = useToast()
 
@@ -44,12 +49,7 @@ export function UpgradeModal() {
     }
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant="default" className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white border-0 shadow-lg hover:scale-105 transition-all">
-                    <Zap className="w-4 h-4 mr-2 fill-white" /> Upgrade to Pro
-                </Button>
-            </DialogTrigger>
+        <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px] bg-zinc-950 border-zinc-800 text-zinc-100">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold flex items-center gap-2">

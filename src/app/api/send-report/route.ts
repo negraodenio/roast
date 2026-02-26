@@ -1,7 +1,7 @@
 import React from 'react'
 import { NextRequest, NextResponse } from 'next/server'
 import { renderToBuffer } from '@react-pdf/renderer'
-import { RoastPdf } from '@/components/pdf/RoastPdf'
+import { RoastPdf, RoastPdfProps } from '@/components/pdf/RoastPdf'
 import { sendRoastReport, RoastReportData } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
@@ -25,8 +25,14 @@ export async function POST(request: NextRequest) {
 
         // Validar estrutura de roastData
         const { url, score, roastText, timestamp, subScores, audits, roastId } = roastData as RoastReportData & {
-            subScores?: any
-            audits?: any
+            subScores?: {
+                ux?: number
+                seo?: number
+                copy?: number
+                conversion?: number
+                security?: number
+            }
+            audits?: Record<string, { score: number; issues?: { severity: 'critical' | 'warning'; title: string; description: string; fix: string }[] }>
             roastId?: string
         }
         if (!url || score === undefined || !roastText) {
@@ -45,8 +51,8 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // Gerar o PDF com dados estruturados
-        const pdfStream = await renderToBuffer(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const pdfStream = (await renderToBuffer(
             React.createElement(RoastPdf, {
                 url,
                 score,
@@ -54,9 +60,9 @@ export async function POST(request: NextRequest) {
                 timestamp: timestamp || new Date().toISOString(),
                 isPremium,
                 subScores,
-                audits,
-            }) as any
-        )
+                audits: audits as RoastPdfProps['audits'],
+            } as RoastPdfProps) as unknown as React.ReactElement // react-pdf types are notoriously difficult with higher-level elements
+        )) as Buffer
 
         // Enviar email com PDF anexado
         const result = await sendRoastReport(

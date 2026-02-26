@@ -2,15 +2,21 @@
 
 import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { CreditCard, Sparkles, History, Loader2, ArrowUpRight } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { UpgradeModal } from "@/components/upgrade-modal"
 
+interface Profile {
+    id: string
+    plan: string
+    credits: number
+    stripe_customer_id?: string
+}
+
 export default function BillingPage() {
-    const [profile, setProfile] = useState<any>(null)
+    const [profile, setProfile] = useState<Profile | null>(null)
     const [loading, setLoading] = useState(true)
     const [portalLoading, setPortalLoading] = useState(false)
     const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false)
@@ -31,7 +37,7 @@ export default function BillingPage() {
             setLoading(false)
         }
         fetchProfile()
-    }, [])
+    }, [supabase])
 
     const handleManageSubscription = async () => {
         setPortalLoading(true)
@@ -42,10 +48,10 @@ export default function BillingPage() {
             if (data.url) {
                 window.location.href = data.url
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast({
                 title: 'Error',
-                description: error.message,
+                description: (error as Error).message,
                 variant: 'destructive'
             })
         } finally {

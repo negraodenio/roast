@@ -128,7 +128,7 @@ export default async function Home() {
                                 <div className="absolute top-0 right-0 bg-red-600 text-white text-[10px] uppercase font-black px-4 py-1.5 rounded-bl-[1.5rem] tracking-widest">Most Popular</div>
                                 <h3 className="text-2xl font-black mb-2 uppercase tracking-tight text-zinc-400">Single Roast</h3>
                                 <div className="text-6xl font-black mb-4 text-white">9,99€</div>
-                                <p className="text-zinc-500 text-sm mb-10 italic">"The reality check your site needs."</p>
+                                <p className="text-zinc-500 text-sm mb-10 italic">&quot;The reality check your site needs.&quot;</p>
 
                                 <ul className="space-y-4 text-left w-full mb-12 text-zinc-400 font-medium">
                                     <li className="flex items-center gap-3"><span className="text-red-500 font-bold">✓</span> Full UX/SEO/Copy Roast</li>
@@ -148,7 +148,7 @@ export default async function Home() {
                             <div className="p-10 rounded-[2.5rem] bg-black border border-white/5 flex flex-col items-center text-center hover:border-zinc-700 transition-all group">
                                 <h3 className="text-2xl font-black mb-2 uppercase tracking-tight text-zinc-600">Agency</h3>
                                 <div className="text-6xl font-black mb-4 text-white">49€<span className="text-2xl text-zinc-700">/mo</span></div>
-                                <p className="text-zinc-500 text-sm mb-10 italic">"Roast your clients into submission."</p>
+                                <p className="text-zinc-500 text-sm mb-10 italic">&quot;Roast your clients into submission.&quot;</p>
 
                                 <ul className="space-y-4 text-left w-full mb-12 text-zinc-500">
                                     <li className="flex items-center gap-3"><span className="text-zinc-700 font-bold">✓</span> Unlimited Roasts</li>
