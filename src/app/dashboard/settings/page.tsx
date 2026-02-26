@@ -17,6 +17,7 @@ const tabs = [
 
 interface SettingsProfile {
     id: string
+    email?: string
     username?: string
     full_name?: string
 }
@@ -35,7 +36,7 @@ export default function SettingsPage() {
             if (user) {
                 const { data, error } = await supabase
                     .from('profiles')
-                    .select('id, full_name, avatar_url, website, plan, credits') // Specifically exclude username for now if it's failing
+                    .select('id, email, full_name, avatar_url, website, plan, credits') // Specifically exclude username
                     .eq('id', user.id)
                     .single()
 
@@ -137,13 +138,13 @@ export default function SettingsPage() {
                             {activeTab === 'general' && (
                                 <div className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="space-y-2">
-                                            <Label htmlFor="username" className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Username</Label>
+                                        <div className="space-y-2 opacity-50">
+                                            <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Email (Account)</Label>
                                             <Input
-                                                id="username"
-                                                value={profile?.username || ''}
-                                                onChange={(e) => profile && setProfile({ ...profile, username: e.target.value })}
-                                                className="bg-black/40 border-zinc-800 rounded-xl focus:border-red-500/50 h-12"
+                                                id="email"
+                                                value={profile?.email || ''}
+                                                disabled
+                                                className="bg-black/40 border-zinc-800 rounded-xl cursor-not-allowed h-12"
                                             />
                                         </div>
                                         <div className="space-y-2">
