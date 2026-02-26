@@ -1,4 +1,4 @@
-import { ImageResponse } from '@vercel/og'
+import { ImageResponse } from 'next/og'
 import { NextRequest } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
@@ -19,12 +19,25 @@ export async function GET(req: NextRequest) {
         const supabase = createClient(supabaseUrl, supabaseServiceRole)
         const { data: roast } = await supabase
             .from('roasts')
-            .select('website_url, score, headline')
+            .select('url, score, roast_text')
             .eq('id', id)
             .single()
 
         if (!roast) {
             return new Response('Roast not found', { status: 404 })
+        }
+
+        // Extract headline from roast_text JSONB
+        let headline = "Your Website Sucks."
+        if (roast.roast_text) {
+            if (typeof roast.roast_text === 'string') {
+                try {
+                    const parsed = JSON.parse(roast.roast_text)
+                    headline = parsed.headline || headline
+                } catch { }
+            } else if (typeof roast.roast_text === 'object') {
+                headline = (roast.roast_text as any).headline || headline
+            }
         }
 
         return new ImageResponse(
@@ -59,10 +72,10 @@ export async function GET(req: NextRequest) {
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                         <div style={{ fontSize: '32px', color: '#888', marginBottom: '10px' }}>
-                            {roast.website_url}
+                            {roast.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
                         </div>
                         <div style={{ fontSize: '64px', fontWeight: '900', marginBottom: '20px', maxWidth: '800px' }}>
-                            {roast.headline}
+                            {headline}
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
