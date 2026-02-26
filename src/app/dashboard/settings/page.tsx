@@ -33,12 +33,23 @@ export default function SettingsPage() {
         const fetchProfile = async () => {
             const { data: { user } } = await supabase.auth.getUser()
             if (user) {
-                const { data } = await supabase
+                const { data, error } = await supabase
                     .from('profiles')
-                    .select('*')
+                    .select('id, full_name, avatar_url, website, plan, credits') // Specifically exclude username for now if it's failing
                     .eq('id', user.id)
                     .single()
-                setProfile(data)
+
+                if (error) {
+                    // Try one more time with a basic select if the specific one fails
+                    const { data: fallbackData } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', user.id)
+                        .single()
+                    setProfile(fallbackData)
+                } else {
+                    setProfile(data)
+                }
             }
             setLoading(false)
         }
@@ -49,12 +60,19 @@ export default function SettingsPage() {
         if (!profile) return
         setIsSaving(true)
         try {
+            // Build update object dynamically to avoid schema errors
+            const updateData: any = {
+                full_name: profile.full_name,
+            }
+
+            // Only add username if we believe it exists in this profile object
+            if ('username' in profile) {
+                updateData.username = profile.username
+            }
+
             const { error } = await supabase
                 .from('profiles')
-                .update({
-                    username: profile.username,
-                    full_name: profile.full_name,
-                })
+                .update(updateData)
                 .eq('id', profile.id)
 
             if (error) throw error

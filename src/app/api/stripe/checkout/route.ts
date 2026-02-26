@@ -26,7 +26,10 @@ export async function POST(req: NextRequest) {
         const priceAgency = process.env.STRIPE_PRICE_AGENCY_MONTHLY
         const priceSingle = process.env.STRIPE_PRICE_SINGLE_REPORT
 
-        const finalPriceId = priceId || priceSingle
+        // Map constants from frontend to actual IDs
+        let finalPriceId = priceId
+        if (priceId === 'price_single') finalPriceId = priceSingle
+        if (priceId === 'price_agency') finalPriceId = priceAgency
 
         if (!finalPriceId) {
             return NextResponse.json({ error: 'Stripe is not fully configured.' }, { status: 500 })
