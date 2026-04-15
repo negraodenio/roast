@@ -98,6 +98,25 @@ export async function POST(req: NextRequest) {
             console.log('❌ Cache MISS - running fresh analysis')
         }
 
+        // --- LLM DAILY BUDGET CAP ---
+        // Counts today's roast records to estimate LLM spend. Each roast = 6 LLM calls.
+        // Cap is configurable via LLM_DAILY_ROAST_LIMIT env var (default: 500 roasts/day).
+        const dailyLimit = parseInt(process.env.LLM_DAILY_ROAST_LIMIT || '500', 10)
+        const startOfDay = new Date()
+        startOfDay.setUTCHours(0, 0, 0, 0)
+        const { count: todayCount } = await supabase
+            .from('roasts')
+            .select('*', { count: 'exact', head: true })
+            .gte('created_at', startOfDay.toISOString())
+
+        if (todayCount !== null && todayCount >= dailyLimit) {
+            console.error(`🚨 LLM BUDGET CAP HIT: ${todayCount}/${dailyLimit} roasts today`)
+            return NextResponse.json(
+                { error: 'Service is temporarily at capacity. Please try again tomorrow.' },
+                { status: 503 }
+            )
+        }
+
         // 3. Auth Check & Credits
         const { data: { user } } = await supabase.auth.getUser()
 
@@ -113,9 +132,6 @@ export async function POST(req: NextRequest) {
             if (profile && profile.plan === 'free' && profile.credits <= 0) {
                 return NextResponse.json({ error: 'No credits left. Please upgrade.' }, { status: 403 })
             }
-        } else {
-            // "Cost Guard": Delay anonymous users to discourage low-quality bot spam
-            await new Promise(resolve => setTimeout(resolve, 3000))
         }
 
         // 3. Scrape Website

@@ -279,8 +279,12 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                             Fine = Revenue * 0.02
                                                         </p>
                                                     </div>
-                                                    <Button className="w-full bg-red-600 hover:bg-red-500 text-white font-black h-12 uppercase tracking-widest rounded-xl shadow-xl shadow-red-900/20 group">
-                                                        Download Compliance Kit
+                                                    <Button
+                                                        className="w-full bg-red-600 hover:bg-red-500 text-white font-black h-12 uppercase tracking-widest rounded-xl shadow-xl shadow-red-900/20 group"
+                                                        onClick={handleCheckout}
+                                                        disabled={isCheckoutLoading}
+                                                    >
+                                                        {isCheckoutLoading ? 'Loading...' : 'Get Full Compliance Report →'}
                                                         <ArrowLeft className="w-4 h-4 ml-2 rotate-180 group-hover:translate-x-1 transition-transform" />
                                                     </Button>
                                                 </div>
