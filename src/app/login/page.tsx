@@ -59,17 +59,6 @@ export default function LoginPage() {
                             Login
                         </Button>
                     </form>
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t border-zinc-800" />
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-zinc-950 px-2 text-zinc-500">Or continue with</span>
-                        </div>
-                    </div>
-                    <Button variant="outline" className="w-full border-zinc-800 hover:bg-zinc-900" onClick={() => alert("Google Auth not set up in demo")}>
-                        Google
-                    </Button>
                 </CardContent>
                 <CardFooter className="flex flex-col gap-2 text-center text-sm">
                     <Link href="/signup" className="text-zinc-400 hover:text-white underline underline-offset-4">
