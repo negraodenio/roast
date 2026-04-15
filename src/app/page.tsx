@@ -40,7 +40,7 @@ export default async function Home() {
                         </h1>
                         
                         <p className="text-xl md:text-2xl text-zinc-400 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
-                            <span className="text-zinc-200">Find exactly why visitors don’t convert</span> — in 10 seconds. Brutally honest audit of your UX, SEO, and copy.
+                            <span className="text-zinc-200">See exactly why visitors don’t convert</span> — in 10 seconds. Brutally honest audit of your UX, SEO, and copy.
                         </p>
 
                         <div className="max-w-2xl mx-auto transform hover:scale-[1.01] transition-transform duration-500 bg-zinc-900/40 p-2 rounded-2xl border border-white/10 backdrop-blur-sm">
@@ -48,12 +48,8 @@ export default async function Home() {
                         </div>
 
                         <div className="mt-8 flex flex-col items-center gap-1">
-                            <div className="flex items-center gap-4 text-xs font-black text-zinc-500 uppercase tracking-[0.2em]">
-                                <span>No Signup</span>
-                                <span className="w-1 h-1 bg-zinc-800 rounded-full" />
-                                <span>Takes 10 seconds</span>
-                                <span className="w-1 h-1 bg-zinc-800 rounded-full" />
-                                <span>3 Free Credits</span>
+                            <div className="flex items-center gap-4 text-xs font-black text-red-500 uppercase tracking-[0.2em] bg-red-500/5 px-4 py-1.5 rounded-full border border-red-500/10">
+                                <span>Free • No signup • Takes 10 seconds</span>
                             </div>
                         </div>
                     </div>
@@ -65,8 +61,9 @@ export default async function Home() {
                         <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter text-white uppercase">
                             Most websites don&apos;t have a traffic problem.
                         </h2>
-                        <p className="text-2xl md:text-3xl text-red-500 font-bold italic mb-12">
-                            They have a conversion problem.
+                        <p className="text-2xl md:text-3xl text-red-500 font-bold italic mb-12 leading-tight">
+                            They have a conversion problem. <br />
+                            <span className="text-sm text-zinc-500 not-italic block mt-4 font-normal uppercase tracking-widest">Most people will leave your site in under 5 seconds.</span>
                         </p>
                         
                         <div className="grid md:grid-cols-2 gap-6 text-left">
@@ -147,8 +144,9 @@ export default async function Home() {
                                     Recommended
                                 </div>
                                 <h3 className="text-3xl font-black mb-2 uppercase tracking-tight text-white mt-4">Full Audit</h3>
-                                <div className="flex items-baseline gap-1 mb-2">
+                                <div className="flex flex-col items-center gap-1 mb-2">
                                     <span className="text-7xl font-black text-white">€9.99</span>
+                                    <span className="text-xs font-black text-zinc-500 uppercase tracking-widest">One-time payment</span>
                                 </div>
                                 <p className="text-zinc-500 text-sm mb-10 font-bold italic">&quot;The reality check your revenue needs.&quot;</p>
 
@@ -229,11 +227,11 @@ export default async function Home() {
                     <div className="container mx-auto px-4 text-center">
                         <h2 className="text-4xl md:text-7xl font-black text-white mb-8 tracking-tighter uppercase max-w-4xl mx-auto leading-none">
                             Your competitors are already fixing their websites. <br />
-                            <span className="text-red-500 italic text-5xl md:text-8xl block mt-4">You&apos;re not.</span>
+                            <span className="text-red-500 italic text-5xl md:text-8xl block mt-4 uppercase">Every day you wait = lost revenue.</span>
                         </h2>
                         <div className="mt-12">
                             <CTAButton className="bg-white text-black hover:bg-zinc-100 px-14 h-20 rounded-3xl font-black text-2xl shadow-3xl transform hover:scale-105 transition-all">
-                                Get My Audit →
+                                Get My Free Audit →
                             </CTAButton>
                         </div>
                     </div>

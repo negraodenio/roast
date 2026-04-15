@@ -74,7 +74,7 @@ export function UrlInput() {
                     disabled={loading}
                 >
                     <Flame className="mr-2 fill-white" />
-                    Analyze My Website →
+                    Get My Free Audit →
                 </Button>
             </div>
         </form>
