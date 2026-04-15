@@ -1,20 +1,21 @@
-import React from 'react'
 import { NextRequest, NextResponse } from 'next/server'
-import { renderToBuffer } from '@react-pdf/renderer'
-import { RoastPdf, RoastPdfProps } from '@/components/pdf/RoastPdf'
 import { sendRoastReport, RoastReportData } from '@/lib/email'
+
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
         const { email, roastData, isPremium = false } = body
 
-        console.log(`📧 Sending report to ${email}`)
-        console.log(`📦 RoastData keys: ${Object.keys(roastData).join(', ')}`)
-        console.log(`📊 SubScores present: ${!!roastData.subScores}`)
-        console.log(`📝 Audits present: ${!!roastData.audits}`)
-        if (roastData.subScores) console.log('SubScores:', JSON.stringify(roastData.subScores))
+        // Dynamic imports to prevent build-time crashes with react-pdf
+        const React = await import('react')
+        const { renderToBuffer } = await import('@react-pdf/renderer')
+        const { RoastPdf } = await import('@/components/pdf/RoastPdf')
 
+        console.log(`📧 Sending report to ${email}`)
+        
         // Validação básica
         if (!email || !roastData) {
             return NextResponse.json(
@@ -35,6 +36,7 @@ export async function POST(request: NextRequest) {
             audits?: Record<string, { score: number; issues?: { severity: 'critical' | 'warning'; title: string; description: string; fix: string }[] }>
             roastId?: string
         }
+        
         if (!url || score === undefined || !roastText) {
             return NextResponse.json(
                 { error: 'Invalid roastData structure' },
@@ -51,7 +53,7 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // Generate PDF using dynamic import
         const pdfStream = (await renderToBuffer(
             React.createElement(RoastPdf, {
                 url,
@@ -60,8 +62,8 @@ export async function POST(request: NextRequest) {
                 timestamp: timestamp || new Date().toISOString(),
                 isPremium,
                 subScores,
-                audits: audits as RoastPdfProps['audits'],
-            } as RoastPdfProps) as unknown as React.ReactElement // react-pdf types are notoriously difficult with higher-level elements
+                audits: audits as any,
+            })
         )) as Buffer
 
         // Enviar email com PDF anexado
