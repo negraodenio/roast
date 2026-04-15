@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@/lib/supabase/server'
 
-// Lazy Stripe initialization to prevent build-time errors
+// Runtime guard — fail loudly if critical env is missing
 function getStripe() {
-    return new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+    const key = process.env.STRIPE_SECRET_KEY
+    if (!key || key.trim() === '') {
+        throw new Error('CRITICAL: STRIPE_SECRET_KEY is not configured. Payments are disabled.')
+    }
+    return new Stripe(key, {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         apiVersion: '2024-06-20' as any,
     })

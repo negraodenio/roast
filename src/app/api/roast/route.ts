@@ -7,20 +7,53 @@ import { callSiliconFlow } from '@/lib/siliconflow'
 // Prevent build-time execution
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
-// Allow long running process (max 60s on Vercel Pro/Hobby is usually 10s so be careful, edge runtime might be needed but Cheerio is Node)
 export const maxDuration = 60
 
 const DEFAULT_MODELS = {
     roast: process.env.SILICONFLOW_ROAST_MODEL || 'deepseek-ai/DeepSeek-V3',
     ux: process.env.SILICONFLOW_UX_MODEL || 'Qwen/Qwen2.5-72B-Instruct',
     seo: process.env.SILICONFLOW_SEO_MODEL || 'deepseek-ai/DeepSeek-V3',
-    security: process.env.SILICONFLOW_SECURITY_MODEL || 'Qwen/Qwen2.5-7B-Instruct' // Lighter model for simple security checks
+    security: process.env.SILICONFLOW_SECURITY_MODEL || 'Qwen/Qwen2.5-7B-Instruct'
 }
+
+
+// --- IP RATE LIMITER ---
+// In-memory store. Works per Vercel instance. Upgrade to Upstash Redis for multi-region at scale.
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>()
+const RATE_LIMIT_MAX = 10
+const RATE_LIMIT_WINDOW = 10 * 60 * 1000 // 10 minutes
+
+function isRateLimited(ip: string): boolean {
+    const now = Date.now()
+    const entry = rateLimitStore.get(ip)
+    if (!entry || now > entry.resetAt) {
+        rateLimitStore.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW })
+        return false
+    }
+    if (entry.count >= RATE_LIMIT_MAX) return true
+    entry.count++
+    return false
+}
+// Cleanup old entries to prevent memory leak
+setInterval(() => {
+    const now = Date.now()
+    rateLimitStore.forEach((value, key) => { if (now > value.resetAt) rateLimitStore.delete(key) })
+}, RATE_LIMIT_WINDOW)
 
 export async function POST(req: NextRequest) {
     try {
         console.time('⏱️ Total Request Time')
         const { url, isPublic, tone = 'medium' } = await req.json()
+
+        // --- IP RATE LIMIT CHECK ---
+        const forwarded = req.headers.get('x-forwarded-for')
+        const ip = forwarded ? forwarded.split(',')[0].trim() : req.headers.get('x-real-ip') || 'unknown'
+        if (isRateLimited(ip)) {
+            return NextResponse.json(
+                { error: 'Too many requests. Please wait a few minutes before analyzing again.' },
+                { status: 429 }
+            )
+        }
 
         // 1. Basic URL Validation
         let validUrl: URL
@@ -53,13 +86,17 @@ export async function POST(req: NextRequest) {
         console.timeEnd('🔍 Cache Check')
 
         if (cachedRoast) {
-            console.log('✅ Cache HIT - returning cached result')
-            console.timeEnd('⏱️ Total Request Time')
-            console.log(`✅ Roast completed for ${validUrl.toString()}`)
-
-            return NextResponse.json({ roastId: cachedRoast.id, cached: true })
+            // SECURITY: If cached roast is paid, do NOT return it to a potential new user.
+            // This prevents cache-based paywall bypass: paid roast -> free access for next visitor of same URL.
+            if (!cachedRoast.paid) {
+                console.log('✅ Cache HIT (free roast) - returning cached result')
+                console.timeEnd('⏱️ Total Request Time')
+                return NextResponse.json({ roastId: cachedRoast.id, cached: true })
+            }
+            console.log('⚠️  Cache HIT but roast is paid — running fresh analysis to prevent paywall bypass')
+        } else {
+            console.log('❌ Cache MISS - running fresh analysis')
         }
-        console.log('❌ Cache MISS - running fresh analysis')
 
         // 3. Auth Check & Credits
         const { data: { user } } = await supabase.auth.getUser()

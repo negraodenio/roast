@@ -93,31 +93,26 @@ export default async function RoastPage({ params }: { params: { id: string } }) 
         console.error("Error parsing roast text:", e)
     }
 
-    // Mask audit data if locked to prevent HTML scraping of unlocked content
-    // But keep scores and top 2 issues for the "Teaser PDF" and visual preview
+    // SECURITY: Strict whitelist — never send full data to browser if not paid.
+    // Using explicit field selection, NOT spread, to prevent accidental data leaks.
     const safeRoast = showFullDetails ? { ...roast, roast_text: roastBody } : {
-        ...roast,
-        roast_text: roastBody, // Inject parsed text
-        ux_audit: {
-            ...roast.ux_audit,
-            issues: roast.ux_audit?.issues?.slice(0, 2)
-        },
-        seo_audit: {
-            ...roast.seo_audit,
-            issues: roast.seo_audit?.issues?.slice(0, 2)
-        },
-        copy_audit: {
-            ...roast.copy_audit,
-            issues: roast.copy_audit?.issues?.slice(0, 2)
-        },
-        conversion_tips: {
-            ...roast.conversion_tips,
-            issues: roast.conversion_tips?.issues?.slice(0, 2)
-        },
-        performance_audit: {
-            ...roast.performance_audit,
-            issues: roast.performance_audit?.issues?.slice(0, 2)
-        }
+        // Safe metadata only
+        id: roast.id,
+        url: roast.url,
+        score: roast.score,
+        paid: roast.paid,
+        is_public: roast.is_public,
+        created_at: roast.created_at,
+        tone: roast.tone,
+        user_id: roast.user_id,
+        // Only preview of roast text (first 160 chars)
+        roast_text: roastBody.substring(0, 160) + "...",
+        // Scores only + max 2 issues per category
+        ux_audit: { score: roast.ux_audit?.score, issues: roast.ux_audit?.issues?.slice(0, 2) },
+        seo_audit: { score: roast.seo_audit?.score, issues: roast.seo_audit?.issues?.slice(0, 2) },
+        copy_audit: { score: roast.copy_audit?.score, issues: [] }, // Zero issues for copy on free tier
+        conversion_tips: { score: roast.conversion_tips?.score, issues: [] }, // Zero for conversion on free tier
+        performance_audit: { score: roast.performance_audit?.score, issues: roast.performance_audit?.issues?.slice(0, 1) },
     }
 
 

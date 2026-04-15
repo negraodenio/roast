@@ -3,9 +3,13 @@ import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 import { sendPaymentConfirmation } from '@/lib/email'
 
-// Lazy Stripe initialization to prevent build-time errors
+// Runtime guard — fail loudly if critical env is missing
 function getStripe() {
-    return new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+    const key = process.env.STRIPE_SECRET_KEY
+    if (!key || key.trim() === '') {
+        throw new Error('CRITICAL: STRIPE_SECRET_KEY is not configured. Payments are disabled.')
+    }
+    return new Stripe(key, {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         apiVersion: '2024-06-20' as any,
     })
@@ -53,15 +57,25 @@ export async function POST(req: NextRequest) {
         }
 
         if (plan === 'single' && roastId) {
-            // Unlock single roast
-            // Audit Skill Tip: Idempotency check
-            const { data: existing } = await supabase
+            // SECURITY: Verify roastId ownership before unlocking
+            const { data: roastCheck } = await supabase
                 .from('roasts')
-                .select('paid')
+                .select('user_id, paid')
                 .eq('id', roastId)
                 .single()
 
-            if (existing && !existing.paid) {
+            if (!roastCheck) {
+                console.error('SECURITY: Webhook received unknown roastId:', roastId)
+                return NextResponse.json({ received: true }) // Don't expose this error to Stripe
+            }
+
+            // If roast has an owner, the paying user must match
+            if (roastCheck.user_id && roastCheck.user_id !== userId) {
+                console.error('SECURITY: roastId does not belong to paying user!', { roastId, userId, roastOwner: roastCheck.user_id })
+                return NextResponse.json({ received: true }) // Silently reject
+            }
+
+            if (!roastCheck.paid) {
                 await supabase
                     .from('roasts')
                     .update({ paid: true })
@@ -73,7 +87,7 @@ export async function POST(req: NextRequest) {
                         customerName: session.customer_details.name || undefined,
                         planName: 'Single Roast Report',
                         amount: '9,99€',
-                        roastUrl: session.metadata?.roastUrl // Assuming we add this or use website_url
+                        roastUrl: session.metadata?.roastUrl
                     })
                 }
             }
