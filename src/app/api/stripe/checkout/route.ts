@@ -63,7 +63,8 @@ export async function POST(req: NextRequest) {
             cancel_url: roastId ? `${process.env.NEXT_PUBLIC_APP_URL}/roast/${roastId}` : `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/billing`,
             customer_email: user?.email || undefined,
             metadata: {
-                userId: user?.id || null,
+                // Stripe metadata only accepts strings — never pass null
+                userId: user?.id || '',
                 roastId: roastId || '',
                 plan: mode === 'subscription' ? 'agency' : 'single'
             },
