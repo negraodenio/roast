@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
 
@@ -13,13 +14,14 @@ export default function SignupPage() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
     const supabase = createClient()
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
 
-        const { error: signUpError } = await supabase.auth.signUp({
+        const { data, error: signUpError } = await supabase.auth.signUp({
             email,
             password,
             options: {
@@ -30,6 +32,9 @@ export default function SignupPage() {
         if (signUpError) {
             alert(signUpError.message)
             setLoading(false)
+        } else if (data.session) {
+            // Auto login if email confirmation is disabled
+            router.push("/dashboard")
         } else {
             alert("Check your email for confirmation link!")
             setLoading(false)
