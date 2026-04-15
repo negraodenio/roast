@@ -176,31 +176,45 @@ export default async function RoastPage({ params }: { params: { id: string } }) 
                                 Analyzing: {roast.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}
                             </div>
 
-                            <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[0.9] text-white">
-                                <span className="text-primary italic mr-2">&quot;</span>
-                                {headline}
-                                <span className="text-primary italic ml-1">&quot;</span>
+                            <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] text-white">
+                                💀 Your site is underperforming
                             </h1>
+                            <p className="text-xl text-zinc-500 font-medium">
+                                You&apos;re losing visitors right now.
+                            </p>
                         </header>
 
-                        <section className="relative group">
-                            <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-purple-500/20 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-                            <ScoreCounter
-                                score={roast.score}
-                                tone={roast.tone as "mild" | "medium" | "spicy" || "medium"}
-                                subScores={subScores}
-                                stats={stats}
-                            />
-                        </section>
+                        <div className="bg-zinc-900/50 p-8 rounded-3xl border border-zinc-800 shadow-xl">
+                            <h2 className="text-3xl font-black text-white">
+                                Score: {roast.score}/100
+                            </h2>
+                            <p className="text-zinc-500 mt-2 font-medium">
+                                Every day you wait = lost conversions.
+                            </p>
+                        </div>
 
-                        <div className="bg-zinc-900/40 backdrop-blur-sm p-8 md:p-10 rounded-3xl border border-zinc-800 shadow-2xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-                                <span className="text-8xl font-black italic">!</span>
-                            </div>
+                        {/* Top Problems Extracted */}
+                        <div>
+                            <h3 className="text-2xl font-bold mb-6 text-white">
+                                You&apos;re losing visitors because:
+                            </h3>
+                            <ul className="space-y-4">
+                                {safeRoast.ux_audit?.issues?.slice(0, 2).map((issue: any, i: number) => (
+                                    <li key={`ux-${i}`} className="flex items-start gap-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+                                        <div className="mt-1 text-red-500 font-bold shrink-0">❌</div>
+                                        <div>
+                                            <strong className="block text-white mb-1">{issue.title}</strong>
+                                            <span className="text-zinc-400 text-sm leading-relaxed">{issue.description}</span>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
+                        <div className="bg-zinc-900/40 p-8 md:p-10 rounded-3xl border border-zinc-800 shadow-2xl relative overflow-hidden">
                             <h2 className="text-xl font-bold mb-6 text-zinc-400 flex items-center gap-2">
                                 <span className="w-2 h-6 bg-primary rounded-full items-center" />
-                                The Savage Truth
+                                🚨 Savage Truth (preview)
                             </h2>
 
                             <article className="prose prose-invert prose-lg max-w-none 
@@ -214,9 +228,29 @@ export default async function RoastPage({ params }: { params: { id: string } }) 
                                 prose-li:text-zinc-300 prose-li:leading-relaxed prose-li::marker:text-primary
                                 prose-code:bg-zinc-800 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-primary prose-code:font-mono
                                 prose-blockquote:border-l-4 prose-blockquote:border-yellow-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-zinc-400">
-                                <div dangerouslySetInnerHTML={{ __html: marked.parse(roastBody) as string }} />
+                                <div dangerouslySetInnerHTML={{ __html: marked.parse(showFullDetails ? roastBody : roastBody.substring(0, 160) + "...") as string }} />
                             </article>
+
+                            {!showFullDetails && (
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent flex items-end p-8">
+                                    <p className="text-sm font-bold text-zinc-400 tracking-widest uppercase">
+                                        🔒 + more brutal insights hidden
+                                    </p>
+                                </div>
+                            )}
                         </div>
+                        
+                        {/* Mid-Page Interrupt */}
+                        {!showFullDetails && (
+                            <div className="bg-red-600 p-8 rounded-3xl text-center shadow-[0_0_40px_rgba(220,38,38,0.2)]">
+                                <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter">
+                                    🚫 Stop guessing.
+                                </h3>
+                                <p className="mt-3 text-red-100 font-medium text-lg">
+                                    Your competitors are fixing this right now.
+                                </p>
+                            </div>
+                        )}
 
                         <div className="pt-4 border-t border-zinc-900">
                             <ShareButtons roastId={roast.id} score={roast.score} url={roast.url} />

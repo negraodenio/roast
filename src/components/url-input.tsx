@@ -6,6 +6,7 @@ import { useState } from "react"
 import { Loader2, Flame } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { ToneSelector } from "./tone-selector"
+import { LoadingRoast } from "./loading-roast"
 
 type RoastTone = "mild" | "medium" | "spicy"
 
@@ -49,6 +50,10 @@ export function UrlInput() {
         }
     }
 
+    if (loading) {
+        return <LoadingRoast />
+    }
+
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full max-w-lg mx-auto">
             <ToneSelector value={tone} onChange={setTone} />
@@ -67,8 +72,8 @@ export function UrlInput() {
                     className="bg-red-600 hover:bg-red-700 text-white font-bold h-12 px-8 shadow-[0_0_20px_rgba(255,68,68,0.2)] transition-all hover:scale-105"
                     disabled={loading}
                 >
-                    {loading ? <Loader2 className="animate-spin mr-2" /> : <Flame className="mr-2 fill-white" />}
-                    Roast It
+                    <Flame className="mr-2 fill-white" />
+                    Analyze My Website →
                 </Button>
             </div>
         </form>

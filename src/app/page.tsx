@@ -32,12 +32,14 @@ export default async function Home() {
                             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
                             AI-Powered Brutality
                         </div>
-                        <h1 className="text-6xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.9] text-white">
-                            Your Website Sucks.<br />
-                            <span className="text-red-500 italic">Let AI Tell You Why.</span>
+                        <h1 className="text-5xl md:text-7xl font-black mb-8 tracking-tighter leading-[0.9] text-white">
+                            🔥 Your website is <span className="text-red-500 italic">losing you money.</span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-zinc-500 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
-                            Stop guessing. Get a <span className="text-zinc-200">brutally honest</span> audit + actionable fixes for UX, SEO, and copy.
+                        <p className="text-xl md:text-2xl text-zinc-400 mb-6 max-w-2xl mx-auto font-medium leading-relaxed">
+                            <span className="text-zinc-200">Get a brutally honest audit in 10 seconds.</span> We show you exactly why visitors don’t convert — and how to fix it.
+                        </p>
+                        <p className="text-red-500 font-black text-sm uppercase tracking-widest mb-10 animate-pulse">
+                            🔥 127 websites roasted today
                         </p>
 
                         <div className="max-w-2xl mx-auto transform hover:scale-[1.01] transition-transform duration-500">
@@ -54,7 +56,7 @@ export default async function Home() {
                 <section className="py-32 bg-black border-y border-white/5">
                     <div className="container mx-auto px-4">
                         <div className="text-center mb-20">
-                            <h2 className="text-4xl md:text-6xl font-black mb-4 tracking-tighter uppercase whitespace-nowrap">360° Forensic Analysis</h2>
+                            <h2 className="text-4xl md:text-6xl font-black mb-4 tracking-tighter uppercase whitespace-nowrap">We find exactly where you're losing customers.</h2>
                             <p className="text-zinc-500 max-w-2xl mx-auto text-lg leading-relaxed">
                                 We don&apos;t just check SEO. We tear down everything that makes your visitors leave.
                             </p>
@@ -116,9 +118,9 @@ export default async function Home() {
 
                     <div className="container mx-auto px-4">
                         <div className="text-center mb-20">
-                            <h2 className="text-4xl md:text-6xl font-black mb-4 uppercase tracking-tighter">Simple, Brutal Pricing</h2>
-                            <p className="text-zinc-500 max-w-xl mx-auto text-lg leading-relaxed">
-                                No hidden fees. Just the truth your designers are too afraid to tell you.
+                            <h2 className="text-4xl md:text-6xl font-black mb-4 uppercase tracking-tighter">Fix your website before it costs you more.</h2>
+                            <p className="text-zinc-500 max-w-xl mx-auto text-lg leading-relaxed italic">
+                                &quot;Every hour you wait is another customer lost to your competitors.&quot;
                             </p>
                         </div>
 
@@ -138,10 +140,13 @@ export default async function Home() {
                                 </ul>
 
                                 <Link href="#" className="w-full">
-                                    <Button className="w-full bg-white text-black hover:bg-zinc-200 font-black h-16 rounded-2xl text-lg uppercase tracking-widest shadow-xl shadow-white/5 transition-all">
-                                        Get Started
+                                    <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-black h-16 rounded-2xl text-lg uppercase tracking-widest shadow-xl shadow-red-900/20 transition-all">
+                                        Fix My Website Now → €9.99
                                     </Button>
                                 </Link>
+                                <p className="mt-4 text-[10px] text-red-500 font-black uppercase tracking-widest animate-pulse">
+                                    🔥 You’re already losing visitors.
+                                </p>
                             </div>
 
                             {/* Agency Plan */}

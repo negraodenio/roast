@@ -32,7 +32,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
             const res = await fetch('/api/stripe/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ roastId: roast.id })
+                body: JSON.stringify({ roastId: roast.id, priceId: 'price_single' })
             })
 
             const data = await res.json()
@@ -44,7 +44,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
             console.error('Checkout error:', error)
             toast({
                 title: 'Checkout Error',
-                description: error.message || 'Could not start checkout.',
+                description: error instanceof Error ? error.message : 'Could not start checkout.',
                 variant: 'destructive'
             })
         } finally {
@@ -58,13 +58,15 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                 <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-zinc-800/50 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
 
                 <div className="relative z-10 flex flex-col items-center justify-center bg-zinc-950/80 backdrop-blur-xl rounded-2xl border border-zinc-800 p-8 md:p-12 text-center shadow-2xl">
-                    <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mb-6 border border-primary/20 rotate-3">
+                    <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mb-6 border border-primary/20 rotate-3 animate-pulse">
                         <Lock className="w-10 h-10 text-primary -rotate-3" />
                     </div>
 
-                    <h3 className="text-3xl font-black text-white mb-3 tracking-tight">Unlock the Full Audit</h3>
-                    <p className="text-zinc-400 mb-8 max-w-md text-balance leading-relaxed">
-                        Get the detailed **UX, SEO, and Copywriting** analysis, plus **10 actionable tips** to boost your conversion rate.
+                    <h3 className="text-3xl md:text-4xl font-black text-white mb-3 tracking-tight">
+                        Fix your website before you lose more customers.
+                    </h3>
+                    <p className="text-zinc-400 mb-8 max-w-md text-balance leading-relaxed font-medium">
+                        Get the full audit + exact fixes for UX, SEO, and conversions.
                     </p>
 
                     <div className="w-full max-w-sm space-y-8">
@@ -98,17 +100,22 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                         <div className="space-y-4">
                             <Button
                                 size="lg"
-                                className="w-full bg-white text-black hover:bg-zinc-200 font-black text-lg h-14 rounded-2xl transition-all flex items-center justify-center gap-2"
+                                className="w-full bg-red-600 hover:bg-red-700 text-white font-black text-lg h-16 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.3)]"
                                 onClick={handleCheckout}
                                 disabled={isCheckoutLoading}
-                                aria-label="Purchase Instant Full Access for 9.99"
+                                aria-label="Fix My Website Now for 9.99"
                             >
                                 {isCheckoutLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5 fill-current" />}
-                                {isCheckoutLoading ? "Loading..." : "Instant Full Access 9,99€"}
+                                {isCheckoutLoading ? "Loading..." : "Fix My Website Now → 9,99€"}
                             </Button>
-                            <p className="text-xs text-zinc-500 font-medium">
-                                No email? Get the full dashboard access immediately.
-                            </p>
+                            <div className="space-y-1">
+                                <p className="text-sm text-zinc-400 font-bold">
+                                    🔥 1,247 websites analyzed this week
+                                </p>
+                                <p className="text-[10px] font-black text-red-500 uppercase tracking-widest">
+                                    Every day you wait = lost revenue
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -352,7 +359,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                         <div className="flex items-start gap-4 p-4 rounded-xl bg-green-500/5 border border-green-500/10 text-green-400/90 text-[13px] leading-relaxed font-semibold">
                                                             <Zap className="w-5 h-5 shrink-0 mt-0.5 text-green-500/60" />
                                                             <div>
-                                                                <strong className="block text-green-500 uppercase text-[10px] tracking-widest mb-1.5 font-black">Critic's Prescription</strong>
+                                                                <strong className="block text-green-500 uppercase text-[10px] tracking-widest mb-1.5 font-black">Critic&apos;s Prescription</strong>
                                                                 {issue.fix}
                                                             </div>
                                                         </div>
@@ -512,7 +519,7 @@ export function AuditSection({ roast, isLocked }: AuditSectionProps) {
                                                         <div className="flex items-start gap-3 p-3.5 rounded-xl bg-green-500/5 border border-green-500/10 text-green-400/90 text-[13px] leading-relaxed font-semibold">
                                                             <Target className="w-4 h-4 shrink-0 mt-0.5 text-green-500/60" />
                                                             <div>
-                                                                <strong className="block text-green-500 uppercase text-[10px] tracking-widest mb-1.5 font-black">Spy's Tactic</strong>
+                                                                <strong className="block text-green-500 uppercase text-[10px] tracking-widest mb-1.5 font-black">Spy&apos;s Tactic</strong>
                                                                 {issue.fix}
                                                             </div>
                                                         </div>
